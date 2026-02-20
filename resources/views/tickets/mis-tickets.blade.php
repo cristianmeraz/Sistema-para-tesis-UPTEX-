@@ -10,9 +10,11 @@
                 <h2><i class="bi bi-ticket-perforated me-2"></i>Mis Tickets</h2>
                 <p class="text-muted mb-0">Todos tus tickets de soporte</p>
             </div>
+            @if(!str_contains(session('usuario_rol'), 'Técnico'))
             <a href="{{ route('tickets.create') }}" class="btn btn-primary">
                 <i class="bi bi-plus-circle me-2"></i>Nuevo Ticket
             </a>
+            @endif
         </div>
     </div>
     
@@ -59,6 +61,71 @@
     
     <!-- LISTA DE TICKETS -->
     <div class="col-12">
+        @if(str_contains(session('usuario_rol'), 'Técnico'))
+        <!-- VISTA DE TABLA PARA TÉCNICO -->
+        @if(count($tickets) > 0)
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>Folio</th>
+                        <th>Título del Ticket</th>
+                        <th>Prioridad</th>
+                        <th>Estado Actual</th>
+                        <th>Fecha de Creación</th>
+                        <th>Fecha de Cierre</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($tickets as $ticket)
+                    <tr>
+                        <td><strong>#{{ $ticket->id_ticket }}</strong></td>
+                        <td>
+                            <a href="{{ route('tickets.show', $ticket->id_ticket) }}" class="text-decoration-none">
+                                {{ $ticket->titulo }}
+                            </a>
+                            <br>
+                            <small class="text-muted">{{ $ticket->usuario->nombre ?? 'N/A' }} {{ $ticket->usuario->apellido ?? '' }}</small>
+                        </td>
+                        <td>
+                            <span class="badge badge-prioridad-{{ $ticket->prioridad->nivel ?? 'media' }}">
+                                {{ $ticket->prioridad->nombre ?? 'N/A' }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge badge-estado-{{ $ticket->estado->tipo ?? 'abierto' }}">
+                                {{ $ticket->estado->nombre ?? 'N/A' }}
+                            </span>
+                        </td>
+                        <td>
+                            <small>{{ $ticket->fecha_creacion ? $ticket->fecha_creacion->format('d/m/Y H:i') : 'N/A' }}</small>
+                        </td>
+                        <td>
+                            <small>{{ $ticket->fecha_cierre ? $ticket->fecha_cierre->format('d/m/Y H:i') : '--' }}</small>
+                        </td>
+                        <td>
+                            <a href="{{ route('tickets.show', $ticket->id_ticket) }}" class="btn btn-sm btn-primary">
+                                <i class="bi bi-eye"></i> Gestionar
+                            </a>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+        @else
+        <div class="card">
+            <div class="card-body text-center py-5">
+                <i class="bi bi-inbox" style="font-size: 4rem; color: #CBD5E1;"></i>
+                <h5 class="mt-3">No tienes tickets aún</h5>
+                <p class="text-muted">El administrador aun no te ha asignado tickets para resolver</p>
+            </div>
+        </div>
+        @endif
+
+        @else
+        <!-- VISTA DE TARJETAS PARA USUARIO NORMAL -->
         @forelse($tickets as $ticket)
         <div class="card mb-3 ticket-card">
             <div class="card-body">
@@ -114,12 +181,15 @@
                 <i class="bi bi-inbox" style="font-size: 4rem; color: #CBD5E1;"></i>
                 <h5 class="mt-3">No tienes tickets aún</h5>
                 <p class="text-muted">Crea tu primer ticket para recibir soporte</p>
+                @if(!str_contains(session('usuario_rol'), 'Técnico'))
                 <a href="{{ route('tickets.create') }}" class="btn btn-primary">
                     <i class="bi bi-plus-circle me-2"></i>Crear Ticket
                 </a>
+                @endif
             </div>
         </div>
         @endforelse
+        @endif
     </div>
 </div>
 
@@ -139,5 +209,94 @@
         font-weight: 700;
     }
 </style>
+@endpush
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const refreshIntervalMs = 60000; // 60 segundos
+    let currentFilters = {
+        estado_id: new URLSearchParams(window.location.search).get('estado_id') || '',
+        prioridad_id: new URLSearchParams(window.location.search).get('prioridad_id') || '',
+        search: new URLSearchParams(window.location.search).get('search') || ''
+    };
+
+    function actualizarTickets() {
+        const params = new URLSearchParams(currentFilters);
+        
+        fetch(`{{ route('api.mis-tickets') }}?${params}`)
+            .then(response => response.json())
+            .then(data => {
+                const tbody = document.querySelector('table tbody');
+                if (!tbody) return;
+
+                // Limpiar tabla actual
+                tbody.innerHTML = '';
+
+                // Agregar nuevas filas
+                data.forEach(ticket => {
+                    const row = document.createElement('tr');
+                    
+                    const estadoBadgeClass = `badge-estado-${ticket.estado_tipo}`;
+                    const prioridadBadgeClass = `badge-prioridad-${ticket.prioridad_nivel}`;
+                    const ticketUrl = `/tickets/${ticket.id_ticket}`;
+                    
+                    row.innerHTML = `
+                        <td><strong>#${ticket.id_ticket}</strong></td>
+                        <td>
+                            <a href="${ticketUrl}" class="text-decoration-none">
+                                ${ticket.titulo}
+                            </a>
+                            <br>
+                            <small class="text-muted">${ticket.usuario_nombre}</small>
+                        </td>
+                        <td>
+                            <span class="badge ${prioridadBadgeClass}">
+                                ${ticket.prioridad_nombre}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge ${estadoBadgeClass}">
+                                ${ticket.estado_nombre}
+                            </span>
+                        </td>
+                        <td>${ticket.fecha_creacion}</td>
+                        <td>${ticket.fecha_cierre}</td>
+                        <td>
+                            <a href="${ticketUrl}" class="btn btn-sm btn-primary">
+                                <i class="bi bi-eye"></i> Gestionar
+                            </a>
+                        </td>
+                    `;
+                    
+                    tbody.appendChild(row);
+                });
+
+                // Si hay datos vacíos, mostrar mensaje
+                if (data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted py-4">No hay tickets que coincidan con los filtros</td></tr>';
+                }
+            })
+            .catch(error => console.error('Error al actualizar tickets:', error));
+    }
+
+    // Auto-refresh cada 60 segundos
+    setInterval(actualizarTickets, refreshIntervalMs);
+
+    // Actualizar cuando cambian los filtros
+    const formFiltros = document.querySelector('form[action="{{ route('tickets.mis-tickets') }}"]');
+    if (formFiltros) {
+        formFiltros.addEventListener('submit', function(e) {
+            e.preventDefault();
+            currentFilters = {
+                estado_id: document.querySelector('select[name="estado_id"]')?.value || '',
+                prioridad_id: document.querySelector('select[name="prioridad_id"]')?.value || '',
+                search: document.querySelector('input[name="search"]')?.value || ''
+            };
+            actualizarTickets();
+        });
+    }
+});
+</script>
 @endpush
 @endsection
