@@ -65,7 +65,7 @@
                         <th>ID</th>
                         <th>Título</th>
                         <th>Usuario</th>
-                        <th>Área</th>
+                        <th>Departamento</th>
                         <th>Prioridad</th>
                         <th>Estado</th>
                         <th>Técnico</th>
@@ -103,16 +103,9 @@
                         </td>
                         <td>{{ \Carbon\Carbon::parse($ticket['fecha_creacion'])->format('d/m/Y H:i') }}</td>
                         <td>
-                            <div class="btn-group btn-group-sm">
-                                <a href="{{ route('tickets.show', $ticket['id_ticket']) }}" class="btn btn-info" title="Ver">
-                                    <i class="bi bi-eye"></i>
-                                </a>
-                                @if(str_contains(session('usuario_rol'), 'Administrador') || str_contains(session('usuario_rol'), 'Técnico'))
-                                <a href="{{ route('tickets.edit', $ticket['id_ticket']) }}" class="btn btn-warning" title="Editar">
-                                    <i class="bi bi-pencil"></i>
-                                </a>
-                                @endif
-                            </div>
+                            <a href="{{ route('tickets.show', $ticket['id_ticket']) }}" class="btn btn-primary btn-sm">
+                                <i class="bi bi-eye"></i> Gestionar
+                            </a>
                         </td>
                     </tr>
                     @empty

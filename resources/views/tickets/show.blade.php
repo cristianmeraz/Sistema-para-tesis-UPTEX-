@@ -62,7 +62,13 @@
                     @if(!$esTecnico)
                     <div class="col-md-6 col-6">
                         <label class="text-muted fw-bold text-uppercase text-primary" style="font-size: 0.95rem;">Técnico asignado:</label>
-                        <p class="fw-bold fs-5 mb-0 text-primary">{{ $ticket['tecnico_asignado']['nombre_completo'] ?? 'Sin asignar' }}</p>
+                        <button type="button" class="btn btn-link p-0 text-primary fw-bold fs-5" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#modalAsignarTecnico"
+                                style="text-decoration: none; font-size: 1rem; cursor: pointer;">
+                            {{ $ticket['tecnico_asignado']['nombre_completo'] ?? 'Sin asignar' }}
+                            <i class="bi bi-pencil ms-1" style="font-size: 0.85rem;"></i>
+                        </button>
                     </div>
                     @endif
                     @if($esTecnico)
@@ -83,14 +89,12 @@
                         <p class="fs-5 mb-0">{{ $ticket['descripcion'] }}</p>
                     </div>
                 </div>
-                
-                @if($esTecnico)
                 <hr class="my-2">
                 <div class="flex-grow-1 d-flex flex-column">
                     <label class="text-muted fw-bold text-uppercase mb-1 d-block" style="font-size: 1rem;">Historial de Comentarios:</label>
                     <div class="bg-light p-2 rounded border shadow-inset flex-grow-1" style="overflow-y: auto;" data-comentarios-container>
                         @forelse($comentarios ?? [] as $comentario)
-                            <div class="mb-2 p-2 bg-white rounded border-start border-4 border-success shadow-sm">
+                            <div class="mb-2 p-2 bg-white rounded border-start border-4 {{ $esTecnico ? 'border-success' : 'border-brown' }} shadow-sm">
                                 <div class="d-flex justify-content-between mb-1 border-bottom pb-1">
                                     <span class="fw-bold" style="font-size: 1.1rem;">{{ $comentario['usuario']['nombre_completo'] }}</span>
                                 </div>
@@ -101,7 +105,6 @@
                         @endforelse
                     </div>
                 </div>
-                @endif
             </div>
         </div>
     </div>
@@ -198,23 +201,6 @@
                         </div>
 
                         <div class="col-md-7 ps-md-4">
-                            @if(!$esTecnico)
-                            <label class="form-label fw-bold text-muted text-uppercase mb-2" style="font-size: 1rem;">Historial de Comentarios:</label>
-                            <div class="bg-light p-3 rounded border mb-3 shadow-inset" style="max-height: 250px; overflow-y: auto;">
-                                @forelse($comentarios ?? [] as $comentario)
-                                    <div class="mb-2 p-2 bg-white rounded border-start border-4 {{ $esTecnico ? 'border-success' : 'border-brown' }} shadow-sm">
-                                        <div class="d-flex justify-content-between mb-1 border-bottom pb-1">
-                                            <span class="fw-bold" style="font-size: 1.1rem;">{{ $comentario['usuario']['nombre_completo'] }}</span>
-                                            <small class="text-muted" style="font-size: 0.9rem;">{{ \Carbon\Carbon::parse($comentario['created_at'])->diffForHumans() }}</small>
-                                        </div>
-                                        <p class="mb-0 text-secondary" style="font-size: 1rem;">{{ $comentario['contenido'] }}</p>
-                                    </div>
-                                @empty
-                                    <p class="text-center text-muted py-3 mb-0" style="font-size: 0.95rem;">No hay comentarios previos.</p>
-                                @endforelse
-                            </div>
-                            @endif
-
                             <div class="mb-0">
                                 <label class="form-label fw-bold text-muted text-uppercase mb-3" style="font-size: 0.95rem;">Agregar comentario / avance: *</label>
                                 <textarea class="form-control form-control-lg {{ $esTecnico ? 'border-success' : 'border-brown' }}" name="contenido" rows="8" placeholder="Indica el motivo del cambio de estado, avances o detalles importantes..." required style="resize: vertical; min-height: 200px; font-size: 0.95rem;"></textarea>
@@ -236,4 +222,61 @@
         </div>
     </div>
 </div>
+
+{{-- MODAL: ASIGNAR TÉCNICO (Solo Administrador) --}}
+@if(!str_contains(session('usuario_rol'), 'Técnico'))
+<div class="modal fade" id="modalAsignarTecnico" tabindex="-1" aria-labelledby="modalAsignarTecnicoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-primary text-white py-3 border-0">
+                <h5 class="modal-title fw-bold" id="modalAsignarTecnicoLabel">
+                    <i class="bi bi-person-check-fill me-2"></i>Asignar Técnico
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            
+            <form action="{{ route('tickets.asignar-tecnico', $ticket['id_ticket']) }}" method="POST" class="needs-validation">
+                @csrf
+                <div class="modal-body p-4">
+                    <p class="text-muted mb-3" style="font-size: 0.95rem;">
+                        <i class="bi bi-info-circle me-1"></i>
+                        Selecciona un técnico para asignarle esta tarea o déjalo sin asignar.
+                    </p>
+                    
+                    <div class="mb-4">
+                        <label for="tecnico_select" class="form-label fw-bold text-uppercase" style="font-size: 0.95rem;">Técnico:</label>
+                        <select class="form-select form-select-lg" id="tecnico_select" name="tecnico_id" style="padding: 0.75rem; font-size: 0.95rem; border-radius: 8px;" required>
+                            <option value="">Sin asignar</option>
+                            @foreach($tecnicos as $tecnico)
+                                <option value="{{ $tecnico->id_usuario }}" 
+                                    {{ $ticket['tecnico_asignado_id'] == $tecnico->id_usuario ? 'selected' : '' }}>
+                                    {{ $tecnico->nombre }} {{ $tecnico->apellido }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    @if($errors->any())
+                    <div class="alert alert-danger mb-0">
+                        <ul class="mb-0">
+                            @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    @endif
+                </div>
+
+                <div class="modal-footer bg-light py-3 border-top">
+                    <button type="button" class="btn btn-secondary px-4 fw-bold" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary px-5 fw-bold shadow">
+                        <i class="bi bi-check-circle me-1"></i>Asignar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endif
+
 @endsection

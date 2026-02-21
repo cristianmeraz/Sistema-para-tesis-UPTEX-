@@ -62,6 +62,8 @@ class TicketWebController extends Controller
             $ticket['estado']['tipo'] = $t->estado->tipo ?? 'abierto';
             // Formatear updated_at con la zona horaria correcta
             $ticket['updated_at_formatted'] = $t->updated_at->setTimezone('America/Mexico_City')->format('d/m/Y H:i');
+            // Nombre completo del técnico asignado
+            $ticket['tecnico_asignado']['nombre_completo'] = ($t->tecnicoAsignado->nombre ?? 'N/A') . ' ' . ($t->tecnicoAsignado->apellido ?? '');
             if (str_contains(session('usuario_rol'), 'Técnico')) {
                 $estados = Estado::whereIn('tipo', ['en_proceso', 'pendiente', 'resuelto'])->get();
             } else { $estados = Estado::all(); }
@@ -69,7 +71,10 @@ class TicketWebController extends Controller
             // Obtener comentarios ordenados por fecha descendente
             $comentarios = $t->comentarios()->orderBy('created_at', 'desc')->get();
             
-            return view('tickets.show', compact('ticket', 'estados', 'comentarios'));
+            // Para administrador: obtener lista de técnicos disponibles
+            $tecnicos = Usuario::whereHas('rol', function($q) { $q->where('nombre', 'Técnico'); })->where('activo', true)->get();
+            
+            return view('tickets.show', compact('ticket', 'estados', 'comentarios', 'tecnicos'));
         } catch (\Exception $e) { return redirect()->route('dashboard')->with('error', 'Error al abrir el ticket'); }
     }
 
@@ -201,6 +206,29 @@ class TicketWebController extends Controller
             }
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Error al actualizar: ' . $e->getMessage());
+        }
+    }
+
+    /** 8. ASIGNAR TÉCNICO: Solo Administrador */
+    public function asignarTecnico(Request $request, $id)
+    {
+        try {
+            // Validar que solo administrador pueda hacer esto
+            if (!str_contains(session('usuario_rol'), 'Administrador')) {
+                return redirect()->back()->with('error', 'No tienes permiso para asignar técnicos');
+            }
+
+            $request->validate([
+                'tecnico_id' => 'nullable|exists:usuarios,id_usuario',
+            ]);
+
+            $ticket = Ticket::findOrFail($id);
+            $ticket->tecnico_asignado_id = $request->tecnico_id;
+            $ticket->save();
+
+            return redirect()->route('tickets.show', $id)->with('success', 'Técnico asignado correctamente');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Error al asignar técnico: ' . $e->getMessage());
         }
     }
 
