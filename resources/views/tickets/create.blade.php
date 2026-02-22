@@ -3,50 +3,53 @@
 @section('title', 'Crear Ticket')
 
 @section('content')
-<div class="row">
-    <div class="col-lg-8">
+<div class="row g-2 g-md-3 g-lg-4">
+    <div class="col-12 col-lg-8">
         <div class="card">
-            <div class="card-header">
+            <div class="card-header bg-light">
                 <h5 class="mb-0"><i class="bi bi-plus-circle me-2"></i>Crear Nuevo Ticket</h5>
             </div>
             <div class="card-body">
                 <form action="{{ route('tickets.store') }}" method="POST" id="ticketForm">
                     @csrf
                     
-                    <div class="mb-4">
+                    <div class="mb-3 mb-md-4">
                         <label for="titulo" class="form-label fw-semibold">Título del Problema *</label>
                         <input type="text" 
-                               class="form-control form-control-lg @error('titulo') is-invalid @enderror" 
+                               class="form-control  @error('titulo') is-invalid @enderror" 
                                id="titulo" 
                                name="titulo" 
                                value="{{ old('titulo') }}"
                                placeholder="Ej: No puedo acceder a mi correo institucional"
-                               required>
+                               required
+                               style="min-height: 44px;">
                         @error('titulo')
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
                     
-                    <div class="mb-4">
+                    <div class="mb-3 mb-md-4">
                         <label for="descripcion" class="form-label fw-semibold">Descripción Detallada *</label>
                         <textarea class="form-control @error('descripcion') is-invalid @enderror" 
                                   id="descripcion" 
                                   name="descripcion" 
                                   rows="6"
                                   placeholder="Describe el problema con el mayor detalle posible. Incluye:&#10;- ¿Qué estabas haciendo cuando ocurrió?&#10;- ¿Qué mensaje de error viste?&#10;- ¿Cuándo comenzó el problema?"
-                                  required>{{ old('descripcion') }}</textarea>
+                                  required
+                                  style="min-height: 150px;">{{ old('descripcion') }}</textarea>
                         @error('descripcion')
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
                     
-                    <div class="row">
-                        <div class="col-md-6 mb-4">
+                    <div class="row g-2 g-md-3">
+                        <div class="col-12 col-md-6 mb-3 mb-md-4">
                             <label for="area_id" class="form-label fw-semibold">Área Relacionada *</label>
                             <select class="form-select @error('area_id') is-invalid @enderror" 
                                     id="area_id" 
                                     name="area_id" 
-                                    required>
+                                    required
+                                    style="min-height: 44px;">
                                 <option value="">Selecciona un área</option>
                                 @foreach($areas ?? [] as $area)
                                 <option value="{{ $area['id_area'] }}" {{ old('area_id') == $area['id_area'] ? 'selected' : '' }}>
@@ -59,12 +62,13 @@
                             @enderror
                         </div>
                         
-                        <div class="col-md-6 mb-4">
+                        <div class="col-12 col-md-6 mb-3 mb-md-4">
                             <label for="prioridad_id" class="form-label fw-semibold">Prioridad *</label>
                             <select class="form-select @error('prioridad_id') is-invalid @enderror" 
                                     id="prioridad_id" 
                                     name="prioridad_id" 
-                                    required>
+                                    required
+                                    style="min-height: 44px;">
                                 <option value="">Selecciona prioridad</option>
                                 @foreach($prioridades ?? [] as $prioridad)
                                 <option value="{{ $prioridad['id_prioridad'] }}" {{ old('prioridad_id') == $prioridad['id_prioridad'] ? 'selected' : '' }}>
@@ -79,10 +83,10 @@
                     </div>
                     
                     <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-primary btn-lg">
+                        <button type="submit" class="btn btn-primary" style="padding: 12px 20px; font-size: 16px;">
                             <i class="bi bi-send me-2"></i>Enviar Ticket
                         </button>
-                        <a href="{{ route('dashboard') }}" class="btn btn-outline-secondary">
+                        <a href="{{ route('dashboard') }}" class="btn btn-outline-secondary" style="padding: 12px 20px; font-size: 16px;">
                             Cancelar
                         </a>
                     </div>
@@ -91,17 +95,23 @@
         </div>
     </div>
     
-    <!-- CHATBOT IA -->
-    <div class="col-lg-4">
-        <div class="card sticky-top" style="top: 90px;">
+    <!-- CHATBOT IA - RESPONSIVE -->
+    <div class="col-12 col-lg-4 order-lg-last">
+        <div class="card sticky-top" style="top: max(90px, clamp(1rem, 5vh, 2rem));">
             <div class="card-header" style="background: linear-gradient(135deg, #10B981 0%, #059669 100%); color: white;">
-                <h5 class="mb-0">
-                    <i class="bi bi-robot me-2"></i>
-                    Asistente IA
-                </h5>
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="bi bi-robot me-2"></i>
+                        <span class="d-none d-lg-inline">Asistente IA</span>
+                        <span class="d-lg-none">Asistente</span>
+                    </h5>
+                    <button class="btn btn-sm btn-light d-lg-none" id="toggleChat" style="width: 32px; height: 32px; padding: 0;">
+                        <i class="bi bi-chevron-down"></i>
+                    </button>
+                </div>
             </div>
-            <div class="card-body">
-                <div id="chatMessages" style="height: 400px; overflow-y: auto; margin-bottom: 1rem; padding: 1rem; background: #F8FAFC; border-radius: 8px;">
+            <div class="card-body d-lg-block" id="chatContent" style="display: none;">
+                <div id="chatMessages" style="height: 300px; overflow-y: auto; margin-bottom: 1rem; padding: 1rem; background: #F8FAFC; border-radius: 8px;">
                     <div class="chat-message bot-message">
                         <div class="message-content">
                             <strong>Asistente:</strong>
@@ -116,18 +126,19 @@
                     </div>
                 </div>
                 
-                <div class="input-group">
+                <div class="input-group input-group-sm">
                     <input type="text" 
                            id="chatInput" 
                            class="form-control" 
-                           placeholder="Escribe tu pregunta...">
+                           placeholder="Escribe tu pregunta..."
+                           style="min-height: 38px;">
                     <button class="btn btn-success" id="sendChat">
                         <i class="bi bi-send"></i>
                     </button>
                 </div>
                 
-                <div class="mt-3">
-                    <small class="text-muted">
+                <div class="mt-2">
+                    <small class="text-muted d-block">
                         <i class="bi bi-info-circle me-1"></i>
                         Presiona Enter para enviar
                     </small>
@@ -135,16 +146,16 @@
                 
                 <!-- SUGERENCIAS RÁPIDAS -->
                 <div class="mt-3">
-                    <p class="small fw-semibold mb-2">Sugerencias rápidas:</p>
+                    <p class="small fw-semibold mb-2">Sugerencias:</p>
                     <div class="d-grid gap-2">
                         <button class="btn btn-sm btn-outline-success suggestion-btn" data-suggestion="No puedo iniciar sesión en el sistema">
-                            🔐 Problemas de acceso
+                            🔐 Acceso
                         </button>
                         <button class="btn btn-sm btn-outline-success suggestion-btn" data-suggestion="Mi equipo no enciende">
-                            💻 Problemas de equipo
+                            💻 Equipo
                         </button>
                         <button class="btn btn-sm btn-outline-success suggestion-btn" data-suggestion="No tengo conexión a internet">
-                            🌐 Problemas de red
+                            🌐 Red
                         </button>
                     </div>
                 </div>
@@ -184,6 +195,21 @@
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Toggle del chat en móvil
+    const toggleChatBtn = document.getElementById('toggleChat');
+    const chatContent = document.getElementById('chatContent');
+    
+    if (toggleChatBtn) {
+        toggleChatBtn.addEventListener('click', function() {
+            const isVisible = chatContent.style.display !== 'none';
+            chatContent.style.display = isVisible ? 'none' : 'block';
+            
+            // Rotar el ícono
+            toggleChatBtn.querySelector('i').style.transform = isVisible ? 'rotate(0deg)' : 'rotate(180deg)';
+            toggleChatBtn.querySelector('i').style.transition = 'transform 0.3s ease';
+        });
+    }
+    
     const chatInput = document.getElementById('chatInput');
     const sendBtn = document.getElementById('sendChat');
     const chatMessages = document.getElementById('chatMessages');
