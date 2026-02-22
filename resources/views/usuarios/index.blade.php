@@ -3,20 +3,20 @@
 @section('title', 'Gestión de Usuarios')
 
 @section('content')
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2><i class="bi bi-people"></i> Gestión de Usuarios</h2>
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <h2 class="m-0"><i class="bi bi-people"></i> Gestión de Usuarios</h2>
     <a href="{{ route('usuarios.create') }}" class="btn btn-primary">
-        <i class="bi bi-person-plus"></i> Nuevo Usuario
+        <i class="bi bi-person-plus"></i> <span class="d-none d-sm-inline">Nuevo</span> Usuario
     </a>
 </div>
 
 <!-- Filtros -->
 <div class="card mb-4">
     <div class="card-body">
-        <div class="row g-3">
-            <div class="col-md-4">
+        <div class="row g-2 g-md-3">
+            <div class="col-12 col-md-6 col-lg-4">
                 <label class="form-label">Rol</label>
-                <select name="id_rol" id="rolFilter" class="form-select">
+                <select name="id_rol" id="rolFilter" class="form-select form-select-sm">
                     <option value="">Todos los roles</option>
                     @foreach($roles ?? [] as $rol)
                     <option value="{{ $rol['id_rol'] }}" {{ request('id_rol') == $rol['id_rol'] ? 'selected' : '' }}>
@@ -26,9 +26,9 @@
                 </select>
             </div>
             
-            <div class="col-md-4">
+            <div class="col-12 col-md-6 col-lg-4">
                 <label class="form-label">Estado</label>
-                <select name="activo" id="estadoFilter" class="form-select">
+                <select name="activo" id="estadoFilter" class="form-select form-select-sm">
                     <option value="">Todos</option>
                     <option value="1" {{ request('activo') == '1' ? 'selected' : '' }}>Activos</option>
                     <option value="0" {{ request('activo') == '0' ? 'selected' : '' }}>Inactivos</option>
@@ -40,18 +40,19 @@
 
 <!-- Tabla de Usuarios -->
 <div class="card">
-    <div class="card-body">
-        <div class="table-responsive">
-            <table id="usuariosTable" class="table table-hover">
+    <div class="card-body p-0 p-md-3">
+        <!-- VISTA DESKTOP (TABLA) -->
+        <div class="table-responsive d-none d-md-block">
+            <table id="usuariosTable" class="table table-hover mb-0">
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Correo</th>
-                        <th>Rol</th>
-                        <th>Estado</th>
-                        <th>Creado</th>
-                        <th>Acciones</th>
+                        <th style="min-width: 60px;">ID</th>
+                        <th style="min-width: 160px;">Nombre</th>
+                        <th style="min-width: 150px;">Correo</th>
+                        <th style="min-width: 110px;">Rol</th>
+                        <th style="min-width: 90px;">Estado</th>
+                        <th style="min-width: 95px;">Creado</th>
+                        <th style="min-width: 140px;" class="text-center">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -80,7 +81,7 @@
                             @endif
                         </td>
                         <td>{{ \Carbon\Carbon::parse($usuario['created_at'])->format('d/m/Y') }}</td>
-                        <td>
+                        <td class="text-center">
                             <div class="btn-group btn-group-sm">
                                 <a href="{{ route('usuarios.show', $usuario['id_usuario']) }}" 
                                    class="btn btn-info" 
@@ -127,6 +128,87 @@
                     @endforelse
                 </tbody>
             </table>
+        </div>
+
+        <!-- VISTA MÓVIL (CARDS) -->
+        <div class="d-md-none">
+            @forelse($usuarios as $usuario)
+            <div class="card mb-3 border-start border-5" style="border-color: var(--primary) !important;">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <div>
+                            <h6 class="card-title mb-1">
+                                <i class="bi bi-person-circle"></i>
+                                <strong>#{{ $usuario['id_usuario'] }}</strong>
+                            </h6>
+                            <p class="mb-1">{{ $usuario['nombre'] }} {{ $usuario['apellido'] }}</p>
+                            <small class="text-muted">{{ $usuario['correo'] }}</small>
+                        </div>
+                    </div>
+
+                    <div class="mb-2 d-flex gap-2 flex-wrap">
+                        @if($usuario['rol']['nombre'] == 'Administrador')
+                            <span class="badge bg-danger">{{ $usuario['rol']['nombre'] }}</span>
+                        @elseif($usuario['rol']['nombre'] == 'Técnico')
+                            <span class="badge bg-warning">{{ $usuario['rol']['nombre'] }}</span>
+                        @else
+                            <span class="badge bg-secondary">{{ $usuario['rol']['nombre'] }}</span>
+                        @endif
+                        
+                        @if($usuario['activo'])
+                            <span class="badge bg-success">Activo</span>
+                        @else
+                            <span class="badge bg-danger">Inactivo</span>
+                        @endif
+                    </div>
+
+                    <small class="text-muted d-block mb-3">
+                        <i class="bi bi-calendar"></i>
+                        Creado: {{ \Carbon\Carbon::parse($usuario['created_at'])->format('d/m/Y') }}
+                    </small>
+
+                    <div class="d-flex gap-2 flex-wrap">
+                        <a href="{{ route('usuarios.show', $usuario['id_usuario']) }}" 
+                           class="btn btn-sm btn-info flex-grow-1" 
+                           title="Ver">
+                            <i class="bi bi-eye"></i> Ver
+                        </a>
+                        <a href="{{ route('usuarios.edit', $usuario['id_usuario']) }}" 
+                           class="btn btn-sm btn-warning flex-grow-1" 
+                           title="Editar">
+                            <i class="bi bi-pencil"></i> Editar
+                        </a>
+                        <form action="{{ route('usuarios.toggle-activo', $usuario['id_usuario']) }}" 
+                              method="POST" 
+                              class="d-inline flex-grow-1">
+                            @csrf
+                            <button type="submit" 
+                                    class="btn btn-sm w-100 {{ $usuario['activo'] ? 'btn-secondary' : 'btn-success' }}" 
+                                    title="{{ $usuario['activo'] ? 'Desactivar' : 'Activar' }}">
+                                <i class="bi bi-power"></i> {{ $usuario['activo'] ? 'Desact' : 'Act' }}
+                            </button>
+                        </form>
+                        @if(session('usuario_id') != $usuario['id_usuario'])
+                        <form action="{{ route('usuarios.destroy', $usuario['id_usuario']) }}" 
+                              method="POST" 
+                              class="d-inline flex-grow-1"
+                              onsubmit="return confirm('¿Eliminar este usuario?')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-sm btn-danger w-100" title="Eliminar">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </form>
+                        @endif
+                    </div>
+                </div>
+            </div>
+            @empty
+            <div class="text-center text-muted py-4">
+                <i class="bi bi-people" style="font-size: 3rem;"></i>
+                <p class="mt-2">No hay usuarios para mostrar</p>
+            </div>
+            @endforelse
         </div>
     </div>
 </div>
