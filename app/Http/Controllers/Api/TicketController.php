@@ -7,8 +7,6 @@ use App\Models\Ticket;
 use App\Models\Estado;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\StoreTicketRequest;
-use App\Http\Requests\UpdateTicketRequest;
 
 class TicketController extends Controller
 {
@@ -71,9 +69,14 @@ class TicketController extends Controller
     /**
      * Crear nuevo ticket
      */
-    public function store(StoreTicketRequest $request)
+    public function store(Request $request)
     {
-        $validated = $request->validated();
+        $validated = $request->validate([
+            'titulo' => 'required|string|max:200',
+            'descripcion' => 'required|string',
+            'area_id' => 'required|exists:areas,id_area',
+            'prioridad_id' => 'required|exists:prioridades,id_prioridad',
+        ]);
 
         $usuario = $request->user();
 
@@ -131,7 +134,7 @@ class TicketController extends Controller
     /**
      * Actualizar ticket
      */
-    public function update(UpdateTicketRequest $request, $id)
+    public function update(Request $request, $id)
     {
         $usuario = $request->user();
         $ticket = Ticket::findOrFail($id);
@@ -144,7 +147,13 @@ class TicketController extends Controller
             ], 403);
         }
 
-        $validated = $request->validated();
+        $validated = $request->validate([
+            'titulo' => 'sometimes|string|max:200',
+            'descripcion' => 'sometimes|string',
+            'area_id' => 'sometimes|exists:areas,id_area',
+            'prioridad_id' => 'sometimes|exists:prioridades,id_prioridad',
+            'estado_id' => 'sometimes|exists:estados,id_estado',
+        ]);
 
         $ticket->update($validated);
         $ticket->load(['usuario', 'area', 'prioridad', 'estado', 'tecnicoAsignado']);

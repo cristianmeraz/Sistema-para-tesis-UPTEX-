@@ -15,7 +15,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: clamp(0.75rem, 4vw, 2rem);
+            padding: 2rem;
         }
         
         .login-container {
@@ -33,69 +33,66 @@
         .login-left {
             background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
             color: white;
-            padding: clamp(1.5rem, 5vw, 3rem);
+            padding: 3rem;
             display: flex;
             flex-direction: column;
             justify-content: center;
         }
         
         .login-logo {
-            font-size: clamp(2rem, 8vw, 3rem);
-            margin-bottom: clamp(1rem, 3vw, 1.5rem);
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
         }
         
         .login-left h2 {
-            font-size: clamp(1.3rem, 4vw, 2rem);
+            font-size: 2rem;
             font-weight: 700;
-            margin-bottom: clamp(0.75rem, 2vw, 1rem);
+            margin-bottom: 1rem;
         }
         
         .login-left p {
-            font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+            font-size: 1.1rem;
             opacity: 0.9;
-            margin-bottom: clamp(1.5rem, 4vw, 2rem);
+            margin-bottom: 2rem;
         }
         
         .feature-item {
             display: flex;
             align-items: center;
-            gap: clamp(0.5rem, 2vw, 1rem);
-            margin-bottom: clamp(0.75rem, 2vw, 1rem);
-            font-size: clamp(0.85rem, 2vw, 1rem);
+            gap: 1rem;
+            margin-bottom: 1rem;
+            font-size: 1rem;
         }
         
         .feature-item i {
-            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            font-size: 1.5rem;
             color: #A5F3FC;
-            flex-shrink: 0;
         }
         
         .login-right {
-            padding: clamp(1.5rem, 5vw, 3rem);
+            padding: 3rem;
         }
         
         .login-right h3 {
-            font-size: clamp(1.3rem, 3vw, 1.75rem);
+            font-size: 1.75rem;
             font-weight: 700;
-            margin-bottom: clamp(0.25rem, 1vw, 0.5rem);
+            margin-bottom: 0.5rem;
         }
         
         .login-right p {
             color: #64748B;
-            margin-bottom: clamp(1.5rem, 3vw, 2rem);
-            font-size: clamp(0.85rem, 2vw, 0.95rem);
+            margin-bottom: 2rem;
         }
         
         .form-floating {
-            margin-bottom: clamp(1rem, 3vw, 1.5rem);
+            margin-bottom: 1.5rem;
         }
         
         .form-control {
             border-radius: 10px;
             border: 2px solid #E2E8F0;
-            padding: clamp(0.5rem, 2vw, 1rem);
-            font-size: clamp(0.9rem, 2vw, 0.95rem);
-            min-height: 44px;
+            padding: 1rem;
+            font-size: 0.95rem;
         }
         
         .form-control:focus {
@@ -105,15 +102,14 @@
         
         .btn-login {
             width: 100%;
-            padding: clamp(0.75rem, 2vw, 1rem);
+            padding: 1rem;
             border-radius: 10px;
             font-weight: 600;
-            font-size: clamp(0.9rem, 2vw, 1rem);
+            font-size: 1rem;
             background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
             border: none;
             color: white;
             transition: all 0.3s;
-            min-height: 44px;
         }
         
         .btn-login:hover {
@@ -123,10 +119,9 @@
         
         .divider {
             text-align: center;
-            margin: clamp(1rem, 3vw, 1.5rem) 0;
+            margin: 1.5rem 0;
             color: #94A3B8;
             position: relative;
-            font-size: clamp(0.8rem, 2vw, 0.9rem);
         }
         
         .divider::before,
@@ -149,9 +144,8 @@
         
         .register-link {
             text-align: center;
-            margin-top: clamp(1rem, 3vw, 1.5rem);
+            margin-top: 1.5rem;
             color: #64748B;
-            font-size: clamp(0.85rem, 2vw, 0.95rem);
         }
         
         .register-link a {
@@ -163,42 +157,39 @@
         .register-link a:hover {
             text-decoration: underline;
         }
-        
-        .form-check {
-            margin-bottom: clamp(1rem, 2vw, 1.5rem);
-        }
-        
-        .form-check-label {
-            font-size: clamp(0.85rem, 2vw, 0.95rem);
-            margin-left: 0.5rem;
-        }
-        
-        .alert {
-            font-size: clamp(0.85rem, 2vw, 0.95rem);
-            margin-bottom: clamp(1rem, 2vw, 1.5rem);
-        }
 
+        /* --- AJUSTES PARA HACERLO RESPONSIVO (MÓVILES Y TABLETS) --- */
         @media (max-width: 991.98px) {
             body {
-                align-items: flex-start;
-                padding-top: clamp(1rem, 4vw, 2rem);
-                padding-bottom: clamp(1rem, 4vw, 2rem);
+                padding: 1rem; /* Menos espacio en las orillas en móviles */
+                align-items: flex-start; /* Permite scroll si la pantalla es muy pequeña */
             }
             .login-left {
+                padding: 2rem;
                 text-align: center;
                 align-items: center;
             }
             .login-left p {
-                margin-bottom: clamp(0.75rem, 2vw, 1rem);
+                margin-bottom: 1rem;
             }
             .features {
-                display: none;
+                display: none; /* Ocultamos los checks en móvil para ir directo al grano (el login) */
+            }
+            .login-right {
+                padding: 2rem;
+            }
+            .login-logo {
+                font-size: 2.5rem;
+                margin-bottom: 0.5rem;
             }
         }
 
         @media (max-width: 576px) {
-            body {
-                padding: clamp(0.5rem, 3vw, 1rem);
+            .login-right {
+                padding: 1.5rem;
+            }
+            .login-right h3 {
+                font-size: 1.5rem;
             }
         }
     </style>
