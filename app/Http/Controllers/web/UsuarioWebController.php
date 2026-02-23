@@ -13,10 +13,24 @@ class UsuarioWebController extends Controller
     /**
      * Lista de usuarios (Se mantiene intacta)
      */
-    public function index()
+    public function index(Request $request)
     {
-        $usuarios = Usuario::with('rol')->orderBy('nombre')->get();
-        return view('usuarios.index', compact('usuarios'));
+        $query = Usuario::with('rol')->orderBy('nombre');
+        
+        // Filtrar por rol
+        if ($request->filled('id_rol')) {
+            $query->where('id_rol', $request->id_rol);
+        }
+        
+        // Filtrar por estado (activo/inactivo)
+        if ($request->filled('activo')) {
+            $query->where('activo', $request->activo == '1' ? true : false);
+        }
+        
+        $usuarios = $query->get()->toArray();
+        $roles = \App\Models\Rol::orderBy('nombre')->get(['id_rol', 'nombre'])->toArray();
+        
+        return view('usuarios.index', compact('usuarios', 'roles'));
     }
 
     /**

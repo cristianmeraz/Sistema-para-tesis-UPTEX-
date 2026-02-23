@@ -13,28 +13,30 @@
 <!-- Filtros -->
 <div class="card mb-4">
     <div class="card-body">
-        <div class="row g-3">
-            <div class="col-md-4">
-                <label class="form-label">Rol</label>
-                <select name="id_rol" id="rolFilter" class="form-select">
-                    <option value="">Todos los roles</option>
-                    @foreach($roles ?? [] as $rol)
-                    <option value="{{ $rol['id_rol'] }}" {{ request('id_rol') == $rol['id_rol'] ? 'selected' : '' }}>
-                        {{ $rol['nombre'] }}
-                    </option>
-                    @endforeach
-                </select>
+        <form method="GET" action="{{ route('usuarios.index') }}" id="filterForm">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label">Rol</label>
+                    <select name="id_rol" id="rolFilter" class="form-select" onchange="document.getElementById('filterForm').submit();">
+                        <option value="">Todos los roles</option>
+                        @foreach($roles ?? [] as $rol)
+                        <option value="{{ $rol['id_rol'] }}" {{ request('id_rol') == $rol['id_rol'] ? 'selected' : '' }}>
+                            {{ $rol['nombre'] }}
+                        </option>
+                        @endforeach
+                    </select>
+                </div>
+                
+                <div class="col-md-4">
+                    <label class="form-label">Estado</label>
+                    <select name="activo" id="estadoFilter" class="form-select" onchange="document.getElementById('filterForm').submit();">
+                        <option value="">Todos</option>
+                        <option value="1" {{ request('activo') == '1' ? 'selected' : '' }}>Activos</option>
+                        <option value="0" {{ request('activo') == '0' ? 'selected' : '' }}>Inactivos</option>
+                    </select>
+                </div>
             </div>
-            
-            <div class="col-md-4">
-                <label class="form-label">Estado</label>
-                <select name="activo" id="estadoFilter" class="form-select">
-                    <option value="">Todos</option>
-                    <option value="1" {{ request('activo') == '1' ? 'selected' : '' }}>Activos</option>
-                    <option value="0" {{ request('activo') == '0' ? 'selected' : '' }}>Inactivos</option>
-                </select>
-            </div>
-        </div>
+        </form>
     </div>
 </div>
 
@@ -81,25 +83,23 @@
                         </td>
                         <td>{{ \Carbon\Carbon::parse($usuario['created_at'])->format('d/m/Y') }}</td>
                         <td>
-                            <div class="btn-group btn-group-sm">
+                            <div class="d-flex gap-2 flex-wrap">
                                 <a href="{{ route('usuarios.show', $usuario['id_usuario']) }}" 
-                                   class="btn btn-info" 
-                                   title="Ver">
-                                    <i class="bi bi-eye"></i>
+                                   class="btn btn-primary btn-sm">
+                                    <i class="bi bi-eye"></i> Gestionar
                                 </a>
                                 <a href="{{ route('usuarios.edit', $usuario['id_usuario']) }}" 
-                                   class="btn btn-warning" 
-                                   title="Editar">
-                                    <i class="bi bi-pencil"></i>
+                                   class="btn btn-warning btn-sm">
+                                    <i class="bi bi-pencil"></i> Editar
                                 </a>
                                 <form action="{{ route('usuarios.toggle-activo', $usuario['id_usuario']) }}" 
                                       method="POST" 
                                       class="d-inline">
                                     @csrf
                                     <button type="submit" 
-                                            class="btn {{ $usuario['activo'] ? 'btn-secondary' : 'btn-success' }}" 
+                                            class="btn btn-sm {{ $usuario['activo'] ? 'btn-secondary' : 'btn-success' }}"
                                             title="{{ $usuario['activo'] ? 'Desactivar' : 'Activar' }}">
-                                        <i class="bi bi-power"></i>
+                                        <i class="bi bi-power"></i> {{ $usuario['activo'] ? 'Desactivar' : 'Activar' }}
                                     </button>
                                 </form>
                                 @if(session('usuario_id') != $usuario['id_usuario'])
@@ -109,8 +109,8 @@
                                       onsubmit="return confirm('¿Estás seguro de eliminar este usuario?')">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger" title="Eliminar">
-                                        <i class="bi bi-trash"></i>
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        <i class="bi bi-trash"></i> Eliminar
                                     </button>
                                 </form>
                                 @endif
@@ -134,136 +134,9 @@
 @push('scripts')
 <script>
 $(document).ready(function() {
-    let dataTableInstance = null;
-    const currentUserId = {{ session('usuario_id') }};
-    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '{{ csrf_token() }}';
-    
-    // Función para cargar y actualizar usuarios
-    function cargarUsuarios() {
-        const rolId = $('#rolFilter').val();
-        const estadoId = $('#estadoFilter').val();
-        
-        // Construir URL con parámetros
-        const params = new URLSearchParams();
-        if (rolId) params.append('id_rol', rolId);
-        if (estadoId !== '') params.append('activo', estadoId);
-        
-        const url = '{{ route("usuarios.index") }}?' + params.toString();
-        
-        // Hacer petición AJAX
-        fetch(url, {
-            method: 'GET',
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-                'Accept': 'application/json'
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            // Destruir DataTable anterior si existe
-            if (dataTableInstance) {
-                dataTableInstance.destroy();
-            }
-            
-            // Limpiar tabla
-            let tbody = $('#usuariosTable tbody');
-            tbody.empty();
-            
-            // Agregar filas
-            if (data.usuarios && data.usuarios.length > 0) {
-                data.usuarios.forEach(usuario => {
-                    const rolBadge = usuario.rol.nombre === 'Administrador' 
-                        ? '<span class="badge bg-danger">Administrador</span>'
-                        : usuario.rol.nombre === 'Técnico'
-                        ? '<span class="badge bg-warning">Técnico</span>'
-                        : '<span class="badge bg-secondary">Usuario Normal</span>';
-                    
-                    const estadoBadge = usuario.activo
-                        ? '<span class="badge bg-success">Activo</span>'
-                        : '<span class="badge bg-danger">Inactivo</span>';
-                    
-                    // Crear HTML para los botones
-                    let botonesHTML = `
-                        <div class="btn-group btn-group-sm">
-                            <a href="/usuarios/${usuario.id_usuario}" class="btn btn-info" title="Ver">
-                                <i class="bi bi-eye"></i>
-                            </a>
-                            <a href="/usuarios/${usuario.id_usuario}/edit" class="btn btn-warning" title="Editar">
-                                <i class="bi bi-pencil"></i>
-                            </a>
-                            <form action="/usuarios/${usuario.id_usuario}/toggle-activo" method="POST" style="display:inline;">
-                                <input type="hidden" name="_token" value="${csrfToken}">
-                                <button type="submit" class="btn ${usuario.activo ? 'btn-secondary' : 'btn-success'}" title="${usuario.activo ? 'Desactivar' : 'Activar'}">
-                                    <i class="bi bi-power"></i>
-                                </button>
-                            </form>
-                    `;
-                    
-                    // Agregar botón de eliminar solo si no es el usuario actual
-                    if (usuario.id_usuario !== currentUserId) {
-                        botonesHTML += `
-                            <form action="/usuarios/${usuario.id_usuario}" method="POST" style="display:inline;" onsubmit="return confirm('¿Estás seguro de eliminar este usuario?');">
-                                <input type="hidden" name="_token" value="${csrfToken}">
-                                <input type="hidden" name="_method" value="DELETE">
-                                <button type="submit" class="btn btn-danger" title="Eliminar">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </form>
-                        `;
-                    }
-                    
-                    botonesHTML += `</div>`;
-                    
-                    const row = `
-                        <tr>
-                            <td><strong>#${usuario.id_usuario}</strong></td>
-                            <td>
-                                <i class="bi bi-person-circle"></i>
-                                ${usuario.nombre} ${usuario.apellido}
-                            </td>
-                            <td>${usuario.correo}</td>
-                            <td>${rolBadge}</td>
-                            <td>${estadoBadge}</td>
-                            <td>${new Date(usuario.created_at).toLocaleDateString('es-ES', {year: 'numeric', month: '2-digit', day: '2-digit'})}</td>
-                            <td>${botonesHTML}</td>
-                        </tr>
-                    `;
-                    tbody.append(row);
-                });
-            } else {
-                tbody.append(`
-                    <tr>
-                        <td colspan="7" class="text-center text-muted py-4">
-                            <i class="bi bi-people" style="font-size: 3rem;"></i>
-                            <p class="mt-2">No hay usuarios para mostrar</p>
-                        </td>
-                    </tr>
-                `);
-            }
-            
-            // Reinicializar DataTable
-            dataTableInstance = $('#usuariosTable').DataTable({
-                "language": {
-                    "url": "//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json"
-                },
-                "pageLength": 15,
-                "order": [[0, 'desc']],
-                "columnDefs": [
-                    { "orderable": false, "targets": 6 }
-                ],
-                "dom": "lrtip"
-            });
-        })
-        .catch(error => console.error('Error:', error));
-    }
-    
-    // Event listeners para los filtros
-    $('#rolFilter').on('change', cargarUsuarios);
-    $('#estadoFilter').on('change', cargarUsuarios);
-    
     // Inicializar DataTable
     if ($('#usuariosTable tbody tr').length > 0) {
-        dataTableInstance = $('#usuariosTable').DataTable({
+        $('#usuariosTable').DataTable({
             "language": {
                 "url": "//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json"
             },

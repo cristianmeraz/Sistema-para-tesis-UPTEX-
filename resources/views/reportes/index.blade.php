@@ -71,34 +71,6 @@
         </div>
     </div>
 
-    <div class="card border-0 shadow-sm p-4">
-        <h5 class="mb-4 fw-bold"><i class="bi bi-bar-chart me-2"></i>Estadísticas del Sistema</h5>
-        <div class="row g-3">
-            <div class="col-6 col-lg-3">
-                <div class="p-3 rounded-3 text-center" style="background: #eff6ff;">
-                    <span class="d-block h4 fw-bold mb-0" style="color: #2563eb;">14</span>
-                    <small class="text-muted">Total Usuarios</small>
-                </div>
-            </div>
-            <div class="col-6 col-lg-3">
-                <div class="p-3 rounded-3 text-center" style="background: #fffbeb;">
-                    <span class="d-block h4 fw-bold mb-0" style="color: #d97706;">3</span>
-                    <small class="text-muted">Técnicos</small>
-                </div>
-            </div>
-            <div class="col-6 col-lg-3">
-                <div class="p-3 rounded-3 text-center" style="background: #f0fdf4;">
-                    <span class="d-block h4 fw-bold mb-0" style="color: #16a34a;">25</span>
-                    <small class="text-muted">Total Tickets</small>
-                </div>
-            </div>
-            <div class="col-6 col-lg-3">
-                <div class="p-3 rounded-3 text-center" style="background: #f8fafc;">
-                    <span class="d-block h4 fw-bold mb-0" style="color: #475569;">4</span>
-                    <small class="text-muted">Cerrados</small>
-                </div>
-            </div>
-        </div>
-    </div>
+
 </div>
 @endsection
