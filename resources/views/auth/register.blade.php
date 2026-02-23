@@ -15,7 +15,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 2rem;
+            padding: clamp(0.75rem, 4vw, 2rem);
         }
         
         .register-container {
@@ -33,65 +33,69 @@
         .register-left {
             background: linear-gradient(135deg, #10B981 0%, #059669 100%);
             color: white;
-            padding: 3rem;
+            padding: clamp(1.5rem, 5vw, 3rem);
             display: flex;
             flex-direction: column;
             justify-content: center;
         }
         
         .register-logo {
-            font-size: 3rem;
-            margin-bottom: 1.5rem;
+            font-size: clamp(2rem, 8vw, 3rem);
+            margin-bottom: clamp(1rem, 3vw, 1.5rem);
         }
         
         .register-left h2 {
-            font-size: 2rem;
+            font-size: clamp(1.3rem, 4vw, 2rem);
             font-weight: 700;
-            margin-bottom: 1rem;
+            margin-bottom: clamp(0.75rem, 2vw, 1rem);
         }
         
         .register-left p {
-            font-size: 1.1rem;
+            font-size: clamp(0.9rem, 2.5vw, 1.1rem);
             opacity: 0.9;
-            margin-bottom: 2rem;
+            margin-bottom: clamp(1.5rem, 4vw, 2rem);
         }
         
         .benefit-item {
             display: flex;
             align-items: center;
-            gap: 1rem;
-            margin-bottom: 1rem;
+            gap: clamp(0.5rem, 2vw, 1rem);
+            margin-bottom: clamp(0.75rem, 2vw, 1rem);
+            font-size: clamp(0.85rem, 2vw, 1rem);
         }
         
         .benefit-item i {
-            font-size: 1.5rem;
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
             color: #A7F3D0;
+            flex-shrink: 0;
         }
         
         .register-right {
-            padding: 3rem;
+            padding: clamp(1.5rem, 5vw, 3rem);
         }
         
         .register-right h3 {
-            font-size: 1.75rem;
+            font-size: clamp(1.3rem, 3vw, 1.75rem);
             font-weight: 700;
-            margin-bottom: 0.5rem;
+            margin-bottom: clamp(0.25rem, 1vw, 0.5rem);
         }
         
         .register-right p {
             color: #64748B;
-            margin-bottom: 2rem;
+            margin-bottom: clamp(1.5rem, 3vw, 2rem);
+            font-size: clamp(0.85rem, 2vw, 0.95rem);
         }
         
         .form-floating {
-            margin-bottom: 1.5rem;
+            margin-bottom: clamp(1rem, 3vw, 1.5rem);
         }
         
         .form-control {
             border-radius: 10px;
             border: 2px solid #E2E8F0;
-            padding: 1rem;
-            font-size: 0.95rem;
+            padding: clamp(0.5rem, 2vw, 1rem);
+            font-size: clamp(0.9rem, 2vw, 0.95rem);
+            min-height: 44px;
         }
         
         .form-control:focus {
@@ -101,14 +105,15 @@
         
         .btn-register {
             width: 100%;
-            padding: 1rem;
+            padding: clamp(0.75rem, 2vw, 1rem);
             border-radius: 10px;
             font-weight: 600;
-            font-size: 1rem;
+            font-size: clamp(0.9rem, 2vw, 1rem);
             background: linear-gradient(135deg, #10B981 0%, #059669 100%);
             border: none;
             color: white;
             transition: all 0.3s;
+            min-height: 44px;
         }
         
         .btn-register:hover {
@@ -118,8 +123,9 @@
         
         .login-link {
             text-align: center;
-            margin-top: 1.5rem;
+            margin-top: clamp(1rem, 3vw, 1.5rem);
             color: #64748B;
+            font-size: clamp(0.85rem, 2vw, 0.95rem);
         }
         
         .login-link a {
@@ -131,43 +137,55 @@
         .login-link a:hover {
             text-decoration: underline;
         }
+        
+        .form-check {
+            margin-bottom: clamp(1rem, 2vw, 1.5rem);
+        }
+        
+        .form-check-label {
+            font-size: clamp(0.8rem, 2vw, 0.95rem);
+            margin-left: 0.5rem;
+        }
+        
+        .form-check-label small {
+            font-size: clamp(0.75rem, 1.5vw, 0.85rem);
+        }
+        
+        .alert {
+            font-size: clamp(0.85rem, 2vw, 0.95rem);
+            margin-bottom: clamp(1rem, 2vw, 1.5rem);
+        }
+        
+        .alert ul {
+            margin-bottom: 0;
+            margin-top: 0.5rem;
+        }
+        
+        .alert li {
+            font-size: clamp(0.75rem, 1.5vw, 0.85rem);
+        }
 
-        /* --- AJUSTES RESPONSIVOS AGREGADOS --- */
         @media (max-width: 991.98px) {
             body {
-                padding: 1rem;
-                align-items: flex-start; /* Para pantallas pequeñas permite scroll natural */
+                align-items: flex-start;
+                padding-top: clamp(1rem, 4vw, 2rem);
+                padding-bottom: clamp(1rem, 4vw, 2rem);
             }
             .register-left {
-                padding: 2rem;
                 text-align: center;
                 align-items: center;
             }
             .register-left p {
-                margin-bottom: 1rem;
+                margin-bottom: clamp(0.75rem, 2vw, 1rem);
             }
             .benefits {
-                display: none; /* Ocultamos beneficios en móvil para ir directo al formulario */
-            }
-            .register-right {
-                padding: 2rem;
-            }
-            .register-logo {
-                font-size: 2.5rem;
-                margin-bottom: 0.5rem;
+                display: none;
             }
         }
 
         @media (max-width: 576px) {
-            .register-right {
-                padding: 1.5rem;
-            }
-            .register-right h3 {
-                font-size: 1.5rem;
-            }
-            /* En celulares muy pequeños, los campos de nombre y apellido se apilan */
-            .row > .col-md-6 {
-                margin-bottom: 0; 
+            body {
+                padding: clamp(0.5rem, 3vw, 1rem);
             }
         }
     </style>
