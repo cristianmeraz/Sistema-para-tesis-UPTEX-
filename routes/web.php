@@ -25,7 +25,7 @@ Route::middleware('web.auth')->group(function () {
     
     // GESTIÓN DE TICKETS (Se añaden las rutas que faltaban para el botón azul)
     Route::resource('tickets', TicketWebController::class);
-    Route::post('/tickets/{id}/asignar-tecnico', [TicketWebController::class, 'asignarTecnico'])->name('tickets.asignar-tecnico');
+    Route::post('/tickets/{id}/asignar', [TicketWebController::class, 'asignar'])->name('tickets.asignar');
     Route::post('/tickets/{id}/cambiar-estado', [TicketWebController::class, 'cambiarEstado'])->name('tickets.cambiar-estado');
     Route::post('/tickets/{id}/cerrar', [TicketWebController::class, 'cerrar'])->name('tickets.cerrar');
     Route::post('/tickets/{id}/comentarios', [TicketWebController::class, 'storeComentario'])->name('tickets.comentarios.store');
