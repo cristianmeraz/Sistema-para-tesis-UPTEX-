@@ -62,8 +62,6 @@ class TicketWebController extends Controller
             $ticket['estado']['tipo'] = $t->estado->tipo ?? 'abierto';
             // Formatear updated_at con la zona horaria correcta
             $ticket['updated_at_formatted'] = $t->updated_at->setTimezone('America/Mexico_City')->format('d/m/Y H:i');
-            // Nombre completo del técnico asignado
-            $ticket['tecnico_asignado']['nombre_completo'] = ($t->tecnicoAsignado->nombre ?? 'N/A') . ' ' . ($t->tecnicoAsignado->apellido ?? '');
             if (str_contains(session('usuario_rol'), 'Técnico')) {
                 $estados = Estado::whereIn('tipo', ['en_proceso', 'pendiente', 'resuelto'])->get();
             } else { $estados = Estado::all(); }
@@ -71,10 +69,7 @@ class TicketWebController extends Controller
             // Obtener comentarios ordenados por fecha descendente
             $comentarios = $t->comentarios()->orderBy('created_at', 'desc')->get();
             
-            // Para administrador: obtener lista de técnicos disponibles
-            $tecnicos = Usuario::whereHas('rol', function($q) { $q->where('nombre', 'Técnico'); })->where('activo', true)->get();
-            
-            return view('tickets.show', compact('ticket', 'estados', 'comentarios', 'tecnicos'));
+            return view('tickets.show', compact('ticket', 'estados', 'comentarios'));
         } catch (\Exception $e) { return redirect()->route('dashboard')->with('error', 'Error al abrir el ticket'); }
     }
 
@@ -121,67 +116,25 @@ class TicketWebController extends Controller
     }
 
     /** 5. USUARIO NORMAL Y TÉCNICO: Ver sus tickets */
-    public function misTickets(Request $request) {
+    public function misTickets() {
         try {
             $usuarioId = session('usuario_id');
             
             // Si es técnico, ve sus tickets asignados
             if (str_contains(session('usuario_rol'), 'Técnico')) {
-                $query = Ticket::with(['usuario', 'area', 'prioridad', 'estado', 'tecnicoAsignado'])
-                    ->where('tecnico_asignado_id', $usuarioId);
-                
-                // Aplicar filtros de estado
-                if ($request->estado_id) {
-                    $query->where('estado_id', $request->estado_id);
-                }
-                
-                // Aplicar filtros de prioridad
-                if ($request->prioridad_id) {
-                    $query->where('prioridad_id', $request->prioridad_id);
-                }
-                
-                // Aplicar búsqueda por texto
-                if ($request->search) {
-                    $search = '%' . $request->search . '%';
-                    $query->where(function($q) use ($search) {
-                        $q->where('titulo', 'like', $search)
-                          ->orWhere('descripcion', 'like', $search);
-                    });
-                }
-                
-                $tickets = $query->orderBy('fecha_creacion', 'desc')->get();
+                $tickets = Ticket::with(['usuario', 'area', 'prioridad', 'estado', 'tecnicoAsignado'])
+                    ->where('tecnico_asignado_id', $usuarioId)
+                    ->orderBy('fecha_creacion', 'desc')
+                    ->get();
             } else {
                 // Si es usuario normal, ve sus propios tickets creados
-                $query = Ticket::with(['estado', 'prioridad', 'area'])
-                    ->where('usuario_id', $usuarioId);
-                
-                // Aplicar filtros de estado
-                if ($request->estado_id) {
-                    $query->where('estado_id', $request->estado_id);
-                }
-                
-                // Aplicar filtros de prioridad
-                if ($request->prioridad_id) {
-                    $query->where('prioridad_id', $request->prioridad_id);
-                }
-                
-                // Aplicar búsqueda por texto
-                if ($request->search) {
-                    $search = '%' . $request->search . '%';
-                    $query->where(function($q) use ($search) {
-                        $q->where('titulo', 'like', $search)
-                          ->orWhere('descripcion', 'like', $search);
-                    });
-                }
-                
-                $tickets = $query->orderBy('fecha_creacion', 'desc')->get();
+                $tickets = Ticket::with(['estado', 'prioridad', 'area'])
+                    ->where('usuario_id', $usuarioId)
+                    ->orderBy('fecha_creacion', 'desc')
+                    ->get();
             }
             
-            // Pasar los catálogos y filtros actuales a la vista
-            $estados = Estado::all();
-            $prioridades = Prioridad::all();
-            
-            return view('tickets.mis-tickets', compact('tickets', 'estados', 'prioridades'));
+            return view('tickets.mis-tickets', compact('tickets'));
         } catch (\Exception $e) { return redirect()->route('dashboard'); }
     }
 
@@ -248,29 +201,6 @@ class TicketWebController extends Controller
             }
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Error al actualizar: ' . $e->getMessage());
-        }
-    }
-
-    /** 8. ASIGNAR TÉCNICO: Solo Administrador */
-    public function asignarTecnico(Request $request, $id)
-    {
-        try {
-            // Validar que solo administrador pueda hacer esto
-            if (!str_contains(session('usuario_rol'), 'Administrador')) {
-                return redirect()->back()->with('error', 'No tienes permiso para asignar técnicos');
-            }
-
-            $request->validate([
-                'tecnico_id' => 'nullable|exists:usuarios,id_usuario',
-            ]);
-
-            $ticket = Ticket::findOrFail($id);
-            $ticket->tecnico_asignado_id = $request->tecnico_id;
-            $ticket->save();
-
-            return redirect()->route('tickets.show', $id)->with('success', 'Técnico asignado correctamente');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Error al asignar técnico: ' . $e->getMessage());
         }
     }
 
