@@ -4,9 +4,10 @@
 
 @section('content')
 <style>
+    /* Estilos para las tarjetas de estadísticas del técnico */
     .stat-card {
         background: white;
-        padding: clamp(0.75rem, 3vw, 1.25rem);
+        padding: 1.25rem;
         border-radius: 15px;
         box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         display: flex;
@@ -18,149 +19,146 @@
     }
     
     .stat-icon {
-        width: clamp(2.5rem, 8vw, 3rem);
-        height: clamp(2.5rem, 8vw, 3rem);
+        width: 45px;
+        height: 45px;
         border-radius: 12px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: clamp(1rem, 3vw, 1.25rem);
+        font-size: 1.25rem;
         margin-bottom: 0.75rem;
     }
 
     .stat-value {
-        font-size: clamp(1.3rem, 4vw, 1.8rem);
+        font-size: 1.5rem;
         font-weight: 700;
         margin-bottom: 0.25rem;
     }
 
     .stat-label {
         color: #64748B;
-        font-size: clamp(0.75rem, 2vw, 0.95rem);
+        font-size: 0.85rem;
         font-weight: 500;
     }
 
-    .table th, .table td {
-        font-size: clamp(0.8rem, 2vw, 0.95rem);
+    @media (max-width: 768px) {
+        .table th, .table td {
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+        .dashboard-header h2 {
+            font-size: 1.5rem;
+        }
     }
 </style>
 
-<div class="container-fluid px-2 px-md-4 py-2 py-md-4">
-    <div class="row">
-        <div class="col-12 mb-3 mb-md-4 dashboard-header">
-            <h2 style="font-size: clamp(1.5rem, 5vw, 2rem);">
-                <i class="bi bi-clipboard-check me-2 text-primary"></i>Panel de Trabajo
-            </h2>
-            <p class="text-muted small" style="font-size: clamp(0.85rem, 2vw, 0.95rem);">Gestiona tus tickets asignados</p>
-        </div>
-        
-        <!-- Estadísticas -->
-        <div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-2 mb-md-3 mb-lg-4">
-            <div class="stat-card">
-                <div class="stat-icon" style="background: #DBEAFE; color: #3B82F6;">
-                    <i class="bi bi-clipboard-data"></i>
-                </div>
-                <div class="stat-value" style="color: #3B82F6;">{{ $stats['asignados'] ?? 0 }}</div>
-                <div class="stat-label">Asignados</div>
+<div class="row">
+    <div class="col-12 mb-4 dashboard-header text-center text-md-start">
+        <h2><i class="bi bi-clipboard-check me-2 text-primary"></i>Panel de Trabajo</h2>
+        <p class="text-muted">Gestiona tus tickets asignados</p>
+    </div>
+    
+    <div class="col-6 col-md-3 mb-4">
+        <div class="stat-card">
+            <div class="stat-icon" style="background: #DBEAFE; color: #3B82F6;">
+                <i class="bi bi-clipboard-data"></i>
             </div>
+            <div class="stat-value" style="color: #3B82F6;">{{ $stats['asignados'] ?? 0 }}</div>
+            <div class="stat-label">Asignados</div>
         </div>
-        
-        <div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-2 mb-md-3 mb-lg-4">
-            <div class="stat-card">
-                <div class="stat-icon" style="background: #FEF3C7; color: #F59E0B;">
-                    <i class="bi bi-hourglass-split"></i>
-                </div>
-                <div class="stat-value" style="color: #F59E0B;">{{ $stats['en_proceso'] ?? 0 }}</div>
-                <div class="stat-label">En Proceso</div>
+    </div>
+    
+    <div class="col-6 col-md-3 mb-4">
+        <div class="stat-card">
+            <div class="stat-icon" style="background: #FEF3C7; color: #F59E0B;">
+                <i class="bi bi-hourglass-split"></i>
             </div>
+            <div class="stat-value" style="color: #F59E0B;">{{ $stats['en_proceso'] ?? 0 }}</div>
+            <div class="stat-label">En Proceso</div>
         </div>
-        
-        <div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-2 mb-md-3 mb-lg-4">
-            <div class="stat-card">
-                <div class="stat-icon" style="background: #D1FAE5; color: #10B981;">
-                    <i class="bi bi-check-circle"></i>
-                </div>
-                <div class="stat-value" style="color: #10B981;">{{ $stats['resueltos_hoy'] ?? 0 }}</div>
-                <div class="stat-label">Resueltos Hoy</div>
+    </div>
+    
+    <div class="col-6 col-md-3 mb-4">
+        <div class="stat-card">
+            <div class="stat-icon" style="background: #D1FAE5; color: #10B981;">
+                <i class="bi bi-check-circle"></i>
             </div>
+            <div class="stat-value" style="color: #10B981;">{{ $stats['resueltos_hoy'] ?? 0 }}</div>
+            <div class="stat-label">Resueltos Hoy</div>
         </div>
-        
-        <div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3 mb-md-4">
-            <div class="stat-card">
-                <div class="stat-icon" style="background: #FEE2E2; color: #EF4444;">
-                    <i class="bi bi-exclamation-triangle"></i>
-                </div>
-                <div class="stat-value" style="color: #EF4444;">{{ $stats['urgentes'] ?? 0 }}</div>
-                <div class="stat-label">Urgentes</div>
+    </div>
+    
+    <div class="col-6 col-md-3 mb-4">
+        <div class="stat-card">
+            <div class="stat-icon" style="background: #FEE2E2; color: #EF4444;">
+                <i class="bi bi-exclamation-triangle"></i>
             </div>
+            <div class="stat-value" style="color: #EF4444;">{{ $stats['urgentes'] ?? 0 }}</div>
+            <div class="stat-label">Urgentes</div>
         </div>
-        
-        <!-- Lista de Tickets -->
-        <div class="col-12">
-            <div class="card border-0 shadow-sm" style="border-radius: 12px;">
-                <div class="card-header bg-white py-2 py-md-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
-                    <h6 class="mb-0 fw-bold" style="font-size: clamp(0.95rem, 2vw, 1.1rem);">
-                        <i class="bi bi-list-task me-2 text-primary"></i>Tickets Asignados
-                    </h6>
-                    <a href="{{ route('tickets.asignados') }}" class="btn btn-sm btn-primary px-2 px-md-3 py-1 py-md-2" style="min-height: 36px; font-size: clamp(0.75rem, 1.5vw, 0.85rem);">Ver Todos</a>
-                </div>
-                <div class="card-body p-0">
-                    @if(isset($tickets) && count($tickets) > 0)
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0">
-                            <thead class="bg-light">
-                                <tr>
-                                    <th class="ps-2 ps-md-3">ID</th>
-                                    <th class="d-none d-md-table-cell">Título</th>
-                                    <th class="d-none d-lg-table-cell">Prioridad</th>
-                                    <th class="d-none d-md-table-cell">Estado</th>
-                                    <th class="pe-2 pe-md-3 text-center">Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($tickets as $ticket)
-                                <tr>
-                                    <td class="ps-2 ps-md-3"><strong>#{{ $ticket->id_ticket }}</strong></td>
-                                    <td class="d-none d-md-table-cell">
-                                        <div class="fw-medium text-dark" style="font-size: clamp(0.85rem, 2vw, 0.95rem);">{{ Str::limit($ticket->titulo, 35) }}</div>
-                                        <small class="text-muted" style="font-size: clamp(0.75rem, 1.5vw, 0.85rem);">{{ $ticket->usuario->nombre }} {{ $ticket->usuario->apellido }}</small>
-                                    </td>
-                                    <td class="d-none d-lg-table-cell">
-                                        <span class="badge badge-prioridad-{{ $ticket->prioridad->nivel }}" style="font-size: clamp(0.7rem, 1.5vw, 0.8rem);">
-                                            {{ $ticket->prioridad->nombre }}
-                                        </span>
-                                    </td>
-                                    <td class="d-none d-md-table-cell">
-                                        <span class="badge badge-estado-{{ $ticket->estado->tipo }}" style="font-size: clamp(0.7rem, 1.5vw, 0.8rem);">
-                                            {{ $ticket->estado->nombre }}
-                                        </span>
-                                    </td>
-                                    <td class="pe-2 pe-md-3 text-center">
-                                        <div class="btn-group">
-                                            <a href="{{ route('tickets.show', $ticket->id_ticket) }}" class="btn btn-sm btn-info text-white" title="Ver Detalle" style="min-width: 36px; min-height: 36px;">
-                                                <i class="bi bi-eye"></i>
-                                            </a>
+    </div>
+    
+    <div class="col-12">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 fw-bold"><i class="bi bi-list-task me-2 text-primary"></i>Tickets Asignados</h5>
+                <a href="{{ route('tickets.asignados') }}" class="btn btn-sm btn-primary px-3">Ver Todos</a>
+            </div>
+            <div class="card-body p-0">
+                @if(isset($tickets) && count($tickets) > 0)
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="ps-3">ID</th>
+                                <th>Título</th>
+                                <th>Prioridad</th>
+                                <th>Estado</th>
+                                <th class="pe-3 text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($tickets as $ticket)
+                            <tr>
+                                <td class="ps-3"><strong>#{{ $ticket->id_ticket }}</strong></td>
+                                <td>
+                                    <div class="fw-medium text-dark">{{ Str::limit($ticket->titulo, 35) }}</div>
+                                    <small class="text-muted">{{ $ticket->usuario->nombre }} {{ $ticket->usuario->apellido }}</small>
+                                </td>
+                                <td>
+                                    <span class="badge badge-prioridad-{{ $ticket->prioridad->nivel }}">
+                                        {{ $ticket->prioridad->nombre }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="badge badge-estado-{{ $ticket->estado->tipo }}">
+                                        {{ $ticket->estado->nombre }}
+                                    </span>
+                                </td>
+                                <td class="pe-3 text-center">
+                                    <div class="btn-group">
+                                        <a href="{{ route('tickets.show', $ticket->id_ticket) }}" class="btn btn-sm btn-info text-white" title="Ver Detalle">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
 
-                                            <a href="{{ route('tecnicos.ver-ticket', $ticket->id_ticket) }}" 
-                                               class="btn btn-sm btn-warning" 
-                                               title="Ver Ficha Técnica"
-                                               style="min-width: 36px; min-height: 36px;">
-                                                <i class="bi bi-file-earmark-text"></i>
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                    @else
-                    <div class="text-center py-3 py-md-5">
-                        <i class="bi bi-inbox text-muted" style="font-size: clamp(2rem, 10vw, 3.5rem);"></i>
-                        <p class="text-muted mt-2 mt-md-3 small" style="font-size: clamp(0.85rem, 2vw, 0.95rem);">No tienes tickets asignados en este momento</p>
-                    </div>
-                    @endif
+                                        <a href="{{ route('tecnicos.ver-ticket', $ticket->id_ticket) }}" 
+                                           class="btn btn-sm btn-warning" 
+                                           title="Ver Ficha Técnica">
+                                            <i class="bi bi-file-earmark-text"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
+                @else
+                <div class="text-center py-5">
+                    <i class="bi bi-inbox text-muted" style="font-size: 3rem;"></i>
+                    <p class="text-muted mt-3">No tienes tickets asignados en este momento</p>
+                </div>
+                @endif
             </div>
         </div>
     </div>

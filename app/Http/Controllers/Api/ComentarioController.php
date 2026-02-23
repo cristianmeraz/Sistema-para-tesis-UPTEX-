@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Ticket;
 use App\Models\Comentario;
 use Illuminate\Http\Request;
-use App\Http\Requests\StoreComentarioRequest;
 
 class ComentarioController extends Controller
 {
@@ -27,7 +26,7 @@ class ComentarioController extends Controller
     /**
      * Agregar comentario a un ticket
      */
-    public function store(StoreComentarioRequest $request, $ticketId)
+    public function store(Request $request, $ticketId)
     {
         $usuario = $request->user();
         $ticket = Ticket::findOrFail($ticketId);
@@ -47,7 +46,9 @@ class ComentarioController extends Controller
             ], 403);
         }
 
-        $validated = $request->validated();
+        $validated = $request->validate([
+            'contenido' => 'required|string',
+        ]);
 
         $comentario = Comentario::create([
             'ticket_id' => $ticketId,

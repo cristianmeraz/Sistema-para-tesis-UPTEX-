@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Análisis Completo - Sistema de Tickets UPTEX</title>
+    <title>Análisis Completo - Sistema de Tickets UPTEX v2.0</title>
     <style>
         * {
             margin: 0;
@@ -303,7 +303,7 @@
         <div class="header">
             <h1>📊 ANÁLISIS COMPLETO</h1>
             <h1>Sistema de Tickets UPTEX</h1>
-            <p class="subtitle"> COMPLETA Y DEFINITIVA Y LO MAS EXPLICADO Y RESUMIDO POSIBLE PARA QUE SI LE ENTENDAMOS </p>
+            <p class="subtitle">VERSIÓN 2.0 - COMPLETA Y DEFINITIVA</p>
             <div class="meta">
                 <p><strong>Fecha:</strong> 14 de febrero de 2026</p>
                 <p><strong>Estado:</strong> ✅ Documentación con Requerimientos Finales</p>
@@ -324,15 +324,13 @@
                 <li><a href="#seccion8">Módulo Usuario Normal</a></li>
                 <li><a href="#seccion9">Código Innecesario</a></li>
                 <li><a href="#seccion10">Mejoras Fase 1 (Arquitectura)</a></li>
-                <li><a href="#seccion11">Mejoras Fase 2A (Responsividad Mobile)</a></li>
-                <li><a href="#seccion12">Mejoras Fase 2B (UX/UI)</a></li>
-                <li><a href="#seccion13">Mejoras Fase 3 (Optimizaciones)</a></li>
-                <li><a href="#seccion14">Mejoras Fase 4 (Seguridad Avanzada)</a></li>
-                <li><a href="#seccion15">Mejoras Fase 5 (Características Nuevas)</a></li>
-                <li><a href="#seccion16">Mejoras Fase 6 (Refactorización API - FINAL)</a></li>
-                <li><a href="#seccion17">Plan Final de Implementación</a></li>
-                <li><a href="#seccion18">Nuevos Requerimientos UPTEX</a></li>
-                <li><a href="#seccion19">Plan de Trabajo Colaborativo por Roles</a></li>
+                <li><a href="#seccion11">Mejoras Fase 2 (UX/UI)</a></li>
+                <li><a href="#seccion12">Mejoras Fase 2B (Optimizaciones)</a></li>
+                <li><a href="#seccion13">Mejoras Fase 3 (Seguridad Avanzada)</a></li>
+                <li><a href="#seccion14">Mejoras Fase 4 (Características Nuevas)</a></li>
+                <li><a href="#seccion15">Plan Final de Implementación</a></li>
+                <li><a href="#seccion16">Nuevos Requerimientos UPTEX</a></li>
+                <li><a href="#seccion17">Plan de Trabajo Colaborativo por Roles</a></li>
             </ol>
         </div>
         
@@ -868,178 +866,7 @@ POST /api/encuestas             → Responder encuesta (NUEVA)</code></pre>
         
         <!-- SECCIÓN 11 -->
         <section id="seccion11">
-            <h2>11. 📱 MEJORAS FASE 2A (RESPONSIVIDAD MOBILE-FIRST)</h2>
-            
-            <h3>Objetivo: Sistema 100% Responsive</h3>
-            <p>El sistema de tickets será usado en dispositivos móviles, tablets y desktops. Todas las vistas deben verse perfectas desde <strong>320px (móvil) hasta 1920px (desktop)</strong>.</p>
-            
-            <h3>Breakpoints Bootstrap 5 a Implementar:</h3>
-            <table>
-                <tr>
-                    <th>Dispositivo</th>
-                    <th>Ancho</th>
-                    <th>Clases</th>
-                    <th>Ejemplos</th>
-                </tr>
-                <tr>
-                    <td>📱 Móvil Small</td>
-                    <td>320px-576px</td>
-                    <td>col-12, col-sm-6</td>
-                    <td>Botones full-width, 1 columna</td>
-                </tr>
-                <tr>
-                    <td>📱 Móvil Large</td>
-                    <td>576px-768px</td>
-                    <td>col-sm-*, col-md-*</td>
-                    <td>2 columnas, cards apiladas</td>
-                </tr>
-                <tr>
-                    <td>📋 Tablet</td>
-                    <td>768px-992px</td>
-                    <td>col-md-*, col-lg-*</td>
-                    <td>3 columnas, tablas reducidas</td>
-                </tr>
-                <tr>
-                    <td>🖥️ Desktop</td>
-                    <td>992px-1200px</td>
-                    <td>col-lg-*, col-xxl-*</td>
-                    <td>Layout completo, tablas normales</td>
-                </tr>
-                <tr>
-                    <td>🖥️ Desktop XL</td>
-                    <td>1200px+</td>
-                    <td>col-xxl-*</td>
-                    <td>Máximo ancho, sidebars visibles</td>
-                </tr>
-            </table>
-            
-            <h3>Auditoría Responsive - Vistas a Revisar:</h3>
-            <ul>
-                <li>✅ <strong>Auth:</strong> Login, Register (inputs centrados, responsive)</li>
-                <li>✅ <strong>Dashboard:</strong> Cards en grid, gráficos responsivos</li>
-                <li>✅ <strong>Tickets Index:</strong> Tabla → Cards en móvil, tabla en desktop</li>
-                <li>✅ <strong>Tickets Show:</strong> Sidebar colapse, comentarios en columna</li>
-                <li>✅ <strong>Tickets Create/Edit:</strong> Formularios full-width móvil</li>
-                <li>✅ <strong>Usuarios (Admin):</strong> Tabla de usuarios responsiva</li>
-                <li>✅ <strong>Reportes:</strong> Gráficos escalables, tablas horizontales</li>
-                <li>✅ <strong>Navbar/Sidebar:</strong> Hamburger menu en móvil, sidebar en desktop</li>
-                <li>✅ <strong>Footer:</strong> Columnas stack en móvil</li>
-                <li>✅ <strong>Modales:</strong> Full-width en móvil, centered en desktop</li>
-            </ul>
-            
-            <h3>Implementación Técnica:</h3>
-            <pre><code>&lt;!-- NAVBAR RESPONSIVA --&gt;
-&lt;nav class="navbar navbar-expand-lg navbar-dark bg-dark"&gt;
-  &lt;div class="container-fluid"&gt;
-    &lt;a class="navbar-brand" href="#"&gt;SisTickets&lt;/a&gt;
-    &lt;button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" 
-            data-bs-target="#sidebarMenu"&gt;
-      &lt;span class="navbar-toggler-icon"&gt;&lt;/span&gt;
-    &lt;/button&gt;
-    &lt;div class="offcanvas offcanvas-start" id="sidebarMenu"&gt;
-      &lt;!-- Menú móvil --&gt;
-    &lt;/div&gt;
-  &lt;/div&gt;
-&lt;/nav&gt;
-
-&lt;!-- TABLA RESPONSIVA (Index Tickets) --&gt;
-&lt;div class="table-responsive"&gt;
-  &lt;table class="table"&gt;
-    &lt;thead&gt;...&lt;/thead&gt;
-    &lt;tbody&gt;...&lt;/tbody&gt;
-  &lt;/table&gt;
-&lt;/div&gt;
-
-&lt;!-- ALTERNATIVA: CARDS PARA MÓVIL --&gt;
-&lt;div class="row"&gt;
-  @foreach($tickets as $ticket)
-    &lt;div class="col-12 col-md-6 col-lg-4 mb-3 d-md-none"&gt;
-      &lt;!-- Card para móvil --&gt;
-    &lt;/div&gt;
-  @endforeach
-&lt;/div&gt;
-
-&lt;!-- FORMULARIO RESPONSIVO --&gt;
-&lt;form class="row g-3"&gt;
-  &lt;div class="col-12 col-md-6"&gt;
-    &lt;input type="text" class="form-control" placeholder="Título"&gt;
-  &lt;/div&gt;
-  &lt;div class="col-12 col-md-6"&gt;
-    &lt;input type="email" class="form-control" placeholder="Email"&gt;
-  &lt;/div&gt;
-  &lt;div class="col-12"&gt;
-    &lt;textarea class="form-control" rows="5"&gt;&lt;/textarea&gt;
-  &lt;/div&gt;
-  &lt;div class="col-12"&gt;
-    &lt;button type="submit" class="btn btn-primary w-100 w-md-auto"&gt;Enviar&lt;/button&gt;
-  &lt;/div&gt;
-&lt;/form&gt;</code></pre>
-            
-            <h3>CSS Personalizado para Touch:</h3>
-            <pre><code>/* resources/css/responsive.css */
-
-/* Mínimo 44px para elementos touchable */
-.btn, .form-control, .form-select {
-    min-height: 44px;
-    font-size: 16px; /* Previene zoom en iOS */
-}
-
-/* Tipografía responsiva */
-h1 { 
-    font-size: clamp(1.5rem, 5vw, 2.5rem);
-}
-
-h2 {
-    font-size: clamp(1.25rem, 4vw, 2rem);
-}
-
-body {
-    font-size: clamp(14px, 1.5vw, 16px);
-}
-
-/* Espaciado responsivo */
-.container {
-    padding-left: clamp(10px, 2vw, 20px);
-    padding-right: clamp(10px, 2vw, 20px);
-}
-
-/* Imágenes responsivas */
-img {
-    max-width: 100%;
-    height: auto;
-    display: block;
-}
-
-/* Media queries adicionales */
-@media (max-width: 576px) {
-    .sidebar { display: none; }
-    .table { font-size: 0.85rem; }
-    .modal { margin: 0; }
-}
-
-@media (max-width: 768px) {
-    .col-layout-2 { flex: 0 0 100%; }
-}
-
-@media (min-width: 1024px) {
-    .sidebar { display: block; }
-    .table { font-size: 1rem; }
-}</code></pre>
-            
-            <h3>Testing Responsivo - Checklist:</h3>
-            <ul>
-                <li>✅ Chrome DevTools: 320px, 375px, 768px, 1024px, 1920px</li>
-                <li>✅ Firefox Responsive Design Mode</li>
-                <li>✅ Dispositivos reales (iPhone 12, iPad, Android)</li>
-                <li>✅ Orientación landscape/portrait</li>
-                <li>✅ Touch events (hover → no funciona en móvil)</li>
-                <li>✅ Performance móvil (Lighthouse score > 85)</li>
-                <li>✅ Velocidad en 4G (throttling en DevTools)</li>
-            </ul>
-        </section>
-        
-        <section id="seccion12">
-            <h2>12. 🎨 MEJORAS FASE 2B (UX/UI)</h2>
+            <h2>11. 🎨 MEJORAS FASE 2 (UX/UI)</h2>
             
             <h3>Mejoras Visuales Principales:</h3>
             <table>
@@ -1180,8 +1007,8 @@ ALTER TABLE usuarios ADD COLUMN (
         </section>
         
         <!-- SECCIÓN 12: FASE 2B - OPTIMIZACIONES -->
-        <section id="seccion13">
-            <h2>13. ⚡ MEJORAS FASE 3 (OPTIMIZACIONES)</h2>
+        <section id="seccion12">
+            <h2>12. ⚡ MEJORAS FASE 2B (OPTIMIZACIONES)</h2>
             
             <div class="box box-info">
                 <h4>1. 💾 CACHÉ PARA CATÁLOGOS</h4>
@@ -1260,8 +1087,8 @@ Schema::table('usuarios', function (Blueprint $table) {
         </section>
         
         <!-- SECCIÓN 13: FASE 3 - SEGURIDAD AVANZADA -->
-        <section id="seccion14">
-            <h2>14. 🔐 MEJORAS FASE 4 (SEGURIDAD AVANZADA)</h2>
+        <section id="seccion13">
+            <h2>13. 🔐 MEJORAS FASE 3 (SEGURIDAD AVANZADA)</h2>
             
             <div class="box box-danger">
                 <h4>1. ⏰ RATE LIMITING EN LOGIN</h4>
@@ -1360,9 +1187,9 @@ AuditLog::log('usuario', $usuario->id, 'cambiar_rol', [
             </div>
         </section>
         
-        <!-- SECCIÓN 15: FASE 5 - CARACTERÍSTICAS NUEVAS -->
-        <section id="seccion15">
-            <h2>15. ✨ MEJORAS FASE 5 (CARACTERÍSTICAS NUEVAS)</h2>
+        <!-- SECCIÓN 14: FASE 4 - CARACTERÍSTICAS NUEVAS -->
+        <section id="seccion14">
+            <h2>14. ✨ MEJORAS FASE 4 (CARACTERÍSTICAS NUEVAS)</h2>
             
             <div class="box box-success">
                 <h4>1. 📧 NOTIFICACIONES POR EMAIL</h4>
@@ -1438,74 +1265,9 @@ $estadisticas = [
         </section>
         
         
-        <!-- SECCIÓN 16: FASE 6 - REFACTORIZACIÓN API (FINAL DEL PROYECTO) -->
-        <section id="seccion16">
-            <h2>16. ⚙️ MEJORAS FASE 6 (REFACTORIZACIÓN API - FINAL)</h2>
-            
-            <div class="box box-warning" style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 20px; margin: 20px 0; border-radius: 4px;">
-                <h3>🔄 Convertir Web Controllers en Clientes API</h3>
-                
-                <p><strong>Tiempo previsto:</strong> 5-7 días</p>
-                
-                <p><strong>Contexto:</strong> Una vez que el sistema esté completo y funcionando sin problemas, refactorizar la arquitectura para que los Web Controllers usen la API REST internamente. Esto permite:</p>
-                
-                <ul style="margin-left: 20px;">
-                    <li>✅ <strong>Reutilización de código:</strong> Web y API comparten lógica (evitar duplicación)</li>
-                    <li>✅ <strong>Separación arquitectónica:</strong> Controllers → API Endpoints → Models → Database (capas claras)</li>
-                    <li>✅ <strong>Escalabilidad:</strong> Preparado para futuras integraciones mobile/terceros sin duplicar lógica</li>
-                    <li>✅ <strong>Testing centralizado:</strong> API se prueba una sola vez, Web confía en ella</li>
-                    <li>✅ <strong>Mantenimiento:</strong> Cambios en lógica se hacen en un solo lugar</li>
-                </ul>
-                
-                <h3>⚠️ ¿Por qué se deja para el FINAL?</h3>
-                <p>Porque primero necesitamos que el sistema esté:</p>
-                <ul style="margin-left: 20px;">
-                    <li>✅ Funcionando correctamente en producción (FASE 1-5)</li>
-                    <li>✅ Responsivo y bien diseñado (FASE 2A, 2B)</li>
-                    <li>✅ Optimizado y seguro (FASE 3, 4)</li>
-                    <li>✅ Con todas las características (FASE 5)</li>
-                    <li>✅ Probado exhaustivamente (FASE 7)</li>
-                </ul>
-                <p>Una vez validado todo lo anterior, <strong>entonces refactorizamos</strong> para usar la API internamente sin riesgo de romper nada.</p>
-                
-                <h3>Componentes a Refactorizar:</h3>
-                <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
-                    <tr style="background: #f5f5f5;">
-                        <th style="border: 1px solid #ddd; padding: 10px; text-align: left;">Web Controller</th>
-                        <th style="border: 1px solid #ddd; padding: 10px; text-align: left;">API Endpoint</th>
-                        <th style="border: 1px solid #ddd; padding: 10px; text-align: left;">Cambio</th>
-                    </tr>
-                    <tr>
-                        <td style="border: 1px solid #ddd; padding: 10px;">TicketWebController.php (775 líneas)</td>
-                        <td style="border: 1px solid #ddd; padding: 10px;">Api/TicketController.php (280 líneas)</td>
-                        <td style="border: 1px solid #ddd; padding: 10px;">Usar API internamente, reducir a 200 líneas</td>
-                    </tr>
-                    <tr>
-                        <td style="border: 1px solid #ddd; padding: 10px;">UsuarioWebController.php (229 líneas)</td>
-                        <td style="border: 1px solid #ddd; padding: 10px;">Api/UsuarioController.php (214 líneas)</td>
-                        <td style="border: 1px solid #ddd; padding: 10px;">Usar API internamente, reducir a 150 líneas</td>
-                    </tr>
-                    <tr>
-                        <td style="border: 1px solid #ddd; padding: 10px;">ReporteWebController.php (305 líneas)</td>
-                        <td style="border: 1px solid #ddd; padding: 10px;">Api/ReporteController.php (124 líneas)</td>
-                        <td style="border: 1px solid #ddd; padding: 10px;">Usar API internamente, reducir a 100 líneas</td>
-                    </tr>
-                    <tr>
-                        <td style="border: 1px solid #ddd; padding: 10px;">WebController.php (Dashboard)</td>
-                        <td style="border: 1px solid #ddd; padding: 10px;">Api/DashboardController.php (159 líneas)</td>
-                        <td style="border: 1px solid #ddd; padding: 10px;">Usar API internamente</td>
-                    </tr>
-                </table>
-                
-                <h3>Nota Importante:</h3>
-                <p>⏱️ Esta fase se deja para el <strong>FINAL del proyecto</strong> porque es una refactorización arquitectónica completa que DEBE hacerse cuando todo está funcionando. Es el "broche de oro" que convierte el sistema en escalable y listo para el futuro.</p>
-            </div>
-        </section>
-        
-        
-        <!-- SECCIÓN 17: PLAN FINAL DE IMPLEMENTACIÓN -->
-        <section id="seccion17">
-            <h2>17. 📅 PLAN FINAL DE IMPLEMENTACIÓN</h2>
+        <!-- SECCIÓN 15: PLAN FINAL DE IMPLEMENTACIÓN -->
+        <section id="seccion15">
+            <h2>15. 📅 PLAN FINAL DE IMPLEMENTACIÓN</h2>
             
             <h3>TIMELINE TOTAL: 35-45 DÍAS (Versión Completa con todas las fases)</h3>
             
@@ -1513,60 +1275,27 @@ $estadisticas = [
                 <h4>📊 Desglose por Fase:</h4>
                 <ul>
                     <li><strong>FASE 1 (Limpieza):</strong> 2-3 días</li>
-                    <li><strong>FASE 2A (Responsividad Mobile):</strong> 4-5 días</li>
-                    <li><strong>FASE 2B (UX/UI Mejorado):</strong> 5-7 días</li>
-                    <li><strong>FASE 3 (Optimizaciones):</strong> 4-5 días</li>
-                    <li><strong>FASE 4 (Seguridad):</strong> 6-8 días</li>
-                    <li><strong>FASE 5 (Características):</strong> 8-10 días</li>
-                    <li><strong>FASE 6 (Refactorización API):</strong> 5-7 días</li>
+                    <li><strong>FASE 2 (UX/UI):</strong> 5-7 días</li>
+                    <li><strong>FASE 2B (Optimizaciones):</strong> 4-5 días</li>
+                    <li><strong>FASE 3 (Seguridad):</strong> 6-8 días</li>
+                    <li><strong>FASE 4 (Características):</strong> 8-10 días</li>
+                    <li><strong>FASE 5 (Testing):</strong> 5-7 días</li>
                     <li><strong>Deploy Final:</strong> 2-3 días</li>
                 </ul>
             </div>
             
             <h3>FASE 1: LIMPIEZA (2-3 DÍAS)</h3>
             <div class="box box-success">
-                <h4>Día 1-3: Limpiar arquitectura</h4>
+                <h4>Día 1:</h4>
                 <ul>
-                    <li>✅ Eliminar User.php (modelo duplicado)</li>
-                    <li>✅ Crear migración drop_users_table (tabla huérfana)</li>
-                    <li>✅ Eliminar carpeta /app/Http/Controllers/Api (código muerto no usado)</li>
-                    <li>✅ Eliminar routes/api.php (rutas no funcionales)</li>
-                    <li>✅ Remover variable token no usada</li>
-                    <li>✅ Crear FormRequests centralizados (StoreTicketRequest, UpdateTicketRequest)</li>
-                    <li>📝 Git Commits: 6 commits específicos (uno por cambio)</li>
+                    <li>Eliminar User.php</li>
+                    <li>Crear migración drop_users_table</li>
+                    <li>Remover variable token no usada</li>
+                    <li>Crear FormRequests centralizados</li>
                 </ul>
             </div>
             
-            <h3>FASE 2A: RESPONSIVIDAD MOBILE-FIRST (4-5 DÍAS)</h3>
-            <div class="box box-info" style="background: #e3f2fd; border-left: 4px solid #1976d2;">
-                <h4>🎯 Objetivo: Sistema 100% Responsive para Celebular y Desktop</h4>
-                <p><strong>Contexto:</strong> El sistema se usará también en dispositivos móviles. Todas las vistas deben verse perfectas desde 320px (móvil) hasta 1920px (desktop).</p>
-                
-                <h4>Implementación:</h4>
-                <ul>
-                    <li><strong>Auditoría Mobile:</strong> Revisar cada vista en Chrome DevTools (320px, 768px, 1024px, 1920px)</li>
-                    <li><strong>Bootstrap 5 Grid:</strong> Actualizar all layouts con col-sm/col-md/col-lg/col-xl</li>
-                    <li><strong>Tablas Responsivas:</strong> Convertir tablas grandes en cards apiladas en móvil</li>
-                    <li><strong>Navegación:</strong> Implementar menú hamburguesa (offcanvas) para móvil</li>
-                    <li><strong>Formularios:</strong> Ajustar inputs, selects, botones para touch (min 44px height)</li>
-                    <li><strong>Imágenes:</strong> Optimizar con srcset, lazy loading</li>
-                    <li><strong>Tipografía:</strong> Escalas responsivas (base 14px móvil → 16px desktop)</li>
-                    <li><strong>Espaciado:</strong> Revisar padding/margin para legibilidad en pantallas pequeñas</li>
-                    <li><strong>Testing:</strong> Validar en dispositivos reales (iOS/Android)</li>
-                </ul>
-                
-                <h4>📋 Checklist por Vista (Admin):</h4>
-                <ul>
-                    <li>Login / Register</li>
-                    <li>Dashboard</li>
-                    <li>Tickets (Index, Create, Edit, Show)</li>
-                    <li>Usuarios (Index, Create, Edit)</li>
-                    <li>Reportes</li>
-                    <li>Header / Sidebar / Footer</li>
-                </ul>
-            </div>
-            
-            <h3>FASE 2B: UX/UI (5-7 DÍAS)</h3>
+            <h3>FASE 2: UX/UI (5-7 DÍAS)</h3>
             <div class="box box-success">
                 <h4>Días 1-7: Implementar todas las mejoras visuales</h4>
                 <ul>
@@ -1579,7 +1308,7 @@ $estadisticas = [
                 </ul>
             </div>
             
-            <h3>FASE 3: OPTIMIZACIONES (4-5 DÍAS)</h3>
+            <h3>FASE 2B: OPTIMIZACIONES (4-5 DÍAS)</h3>
             <div class="box box-success">
                 <h4>Todos los optimizadores de performance</h4>
                 <ul>
@@ -1590,7 +1319,7 @@ $estadisticas = [
                 </ul>
             </div>
             
-            <h3>FASE 4: SEGURIDAD (6-8 DÍAS)</h3>
+            <h3>FASE 3: SEGURIDAD (6-8 DÍAS)</h3>
             <div class="box box-success">
                 <h4>Medidas de seguridad enterprise</h4>
                 <ul>
@@ -1601,7 +1330,7 @@ $estadisticas = [
                 </ul>
             </div>
             
-            <h3>FASE 5: CARACTERÍSTICAS NUEVAS (8-10 DÍAS)</h3>
+            <h3>FASE 4: CARACTERÍSTICAS NUEVAS (8-10 DÍAS)</h3>
             <div class="box box-success">
                 <h4>Funcionalidades avanzadas</h4>
                 <ul>
@@ -1611,16 +1340,19 @@ $estadisticas = [
                 </ul>
             </div>
             
-            <h3>FASE 6: REFACTORIZACIÓN API (5-7 DÍAS) - FINAL DEL PROYECTO</h3>
-            <div class="box box-warning" style="background: #fff3cd; border-left: 4px solid #ffc107;">
-                <h4>⚙️ Convertir Web Controllers en Clientes API</h4>
-                <p><strong>Contexto:</strong> Una vez que el sistema esté completo y funcionando, refactorizar para que Web Controllers usen la API REST internamente. Esto permite:</p>
-                <ul>
-                    <li>✅ Reutilización de código (Web y API comparten lógica)</li>\n                    <li>✅ Separación arquitectónica clara (controllers → api → models → db)</li>\n                    <li>✅ Preparado para futuras integraciones mobile/terceros</li>\n                    <li>✅ Testing de API de forma centralizada</li>\n                </ul>\n                \n                <h4>Componentes a Refactorizar:</h4>\n                <ul>\n                    <li>TicketWebController → Llamar TicketController API internamente</li>\n                    <li>UsuarioWebController → Llamar UsuarioController API internamente</li>\n                    <li>ReporteWebController → Llamar ReporteController API internamente</li>\n                    <li>Dashboard Web → Llamar DashboardController API internamente</li>\n                </ul>\n                \n                <h4>Nota Important:</h4>\n                <p>⚠️ <strong>Se deja para el FINAL</strong> porque requiere que todo esté funcionando correctamente en Web primero. Al hacerlo al final, validamos que la API sea robusta y complete antes de convertirla en único punto de verdad.</p>\n            </div>
-            
-            <h3>FASE 7: TESTING FINAL (5-7 DÍAS)</h3>
+            <h3>FASE 5: TESTING (5-7 DÍAS)</h3>
             <div class="box box-success">
-                <h4>Pruebas exhaustivas post-refactorización</h4>\n                <ul>\n                    <li>Testing de seguridad integrado</li>\n                    <li>Testing de permisos (Web → API → Models)</li>\n                    <li>Testing de performance end-to-end</li>\n                    <li>Testing responsivo en múltiples dispositivos</li>\n                    <li>User Acceptance Testing (UAT)</li>\n                </ul>\n            </div>\n            \n            <h3>FASE 8: DEPLOY FINAL (2-3 DÍAS)</h3>
+                <h4>Pruebas exhaustivas</h4>
+                <ul>
+                    <li>Testing de seguridad</li>
+                    <li>Testing de permisos</li>
+                    <li>Testing de performance</li>
+                    <li>Testing end-to-end</li>
+                    <li>Testing móvil/responsive</li>
+                </ul>
+            </div>
+            
+            <h3>FASE 6: DEPLOY FINAL (2-3 DÍAS)</h3>
             <div class="box box-success">
                 <h4>Lanzamiento en Hostinger</h4>
                 <ul>
@@ -1632,9 +1364,9 @@ $estadisticas = [
             </div>
         </section>
         
-        <!-- SECCIÓN 18: NUEVOS REQUERIMIENTOS UPTEX -->
-        <section id="seccion18">
-            <h2>18. 📋 NUEVOS REQUERIMIENTOS UPTEX DETALLADOS</h2>
+        <!-- SECCIÓN 16: NUEVOS REQUERIMIENTOS UPTEX -->
+        <section id="seccion16">
+            <h2>16. 📋 NUEVOS REQUERIMIENTOS UPTEX DETALLADOS</h2>
             
             <div class="box box-info">
                 <h4>1. Reporte Escrito + Dates</h4>
@@ -1788,9 +1520,9 @@ $comentarios = $ticket->comentarios()
                 <p>Campos: usuario_id, ticket_id, calificacion (1-5), comentarios</p>
                 <p>Mostrar al cerrar ticket</p>
         
-        <!-- SECCIÓN 19: PLAN DE TRABAJO COLABORATIVO -->
-        <section id="seccion19">
-            <h2>19. 👥 PLAN DE TRABAJO COLABORATIVO POR ROLES</h2>
+        <!-- SECCIÓN 17: PLAN DE TRABAJO COLABORATIVO -->
+        <section id="seccion17">
+            <h2>17. 👥 PLAN DE TRABAJO COLABORATIVO POR ROLES</h2>
             
             <div class="box box-info">
                 <p><strong>Idea:</strong> Dividir el desarrollo en 3 colaboradores según los módulos (roles)</p>
@@ -2285,9 +2017,9 @@ commit 4: "feat(admin): add rate limiting on login"
 git push origin feature/admin-fase1-fase2-fase3
 → PR a develop → Merge ✅</code></pre>
             
-            <h3>��� REUNIONES DIARIAS (15 MINUTOS):</h3>
+            <h3>�💬 REUNIONES DIARIAS (15 MINUTOS):</h3>
             <ul>
-                <li>🕐 <strong>Hora:</strong> No se sabe pero de que se hace una se hace </li>
+                <li>🕐 <strong>Hora:</strong> 10:00 AM</li>
                 <li>📍 <strong>Tema:</strong> Status de cada módulo, bugs encontrados, dependencias</li>
                 <li>✅ <strong>Checklist:</strong>
                     <ul style="margin-left: 20px;">
@@ -2340,10 +2072,9 @@ git push origin feature/admin-fase1-fase2-fase3
         
         <!-- FOOTER -->
         <footer style="border-top: 2px solid #2563eb; margin-top: 40px; padding-top: 20px; text-align: center; color: #999;">
-            <p><strong>Documento Versión:</strong> 2.4 - CON RESPONSIVIDAD + FASE 6 (REFACTORIZACIÓN API)</p>
-            <p><strong>Última Actualización:</strong> 15 de febrero de 2026</p>
-            <p><strong>Estado:</strong> ✅ COMPLETO: Plan 8-fases + Responsividad Mobile + Refactorización API final (35-45 días + deploy)</p>
-            <p><strong>Cambios:</strong> ➕ FASE 2A (Responsividad) · ➕ FASE 6 (Refactorización API) · ✅ Eliminación de API Controllers en FASE 1</p>
+            <p><strong>Documento Versión:</strong> 2.3 - CON WORKFLOW GIT/GITHUB INCLUIDO</p>
+            <p><strong>Última Actualización:</strong> 14 de febrero de 2026</p>
+            <p><strong>Estado:</strong> ✅ Completo: Plan colaborativo + Git workflow (3 colaboradores - 20 días + deploy)</p>
         </footer>
     </div>
 </body>
